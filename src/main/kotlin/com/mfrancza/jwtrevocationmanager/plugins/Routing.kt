@@ -11,7 +11,6 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import java.time.Instant
-import kotlin.reflect.jvm.internal.impl.util.ValueParameterCountCheck.Equals
 
 fun Application.configureRouting() {
 
@@ -23,6 +22,8 @@ fun Application.configureRouting() {
             get {
                 call.respond(listOf(
                     Rule(
+                        ruleId = "0b98fdd9-efcb-41e7-910d-3163c3157bc9",
+                        ruleExpires = 1666929810,
                         iss = StringCondition(
                             operation = StringCondition.Operation.Equals,
                             value = "bad.issuer.com"
@@ -31,8 +32,7 @@ fun Application.configureRouting() {
                             operation = DateTimeCondition.Operation.Equals,
                             value = Instant.now().epochSecond
                         )
-                    ),
-
+                    )
                 ))
             }
         }
