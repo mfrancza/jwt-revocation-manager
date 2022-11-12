@@ -133,7 +133,4 @@ class ApplicationTest {
         assertTrue( secondsSinceTimestamp >= 0, "Timestamp should be before current time")
         assertTrue( secondsSinceTimestamp < withinSeconds, "The timestamp should be recent")
     }
-
-
-
 }
