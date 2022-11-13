@@ -1,4 +1,4 @@
-package com.mfrancza.jwtrevocationmanager.rules
+package com.mfrancza.jwtrevocation.rules
 
 import kotlinx.serialization.Serializable
 

@@ -1,7 +1,7 @@
-package com.mfrancza.jwtrevocationmanager.persistence
+package com.mfrancza.jwtrevocation.manager.persistence
 
-import com.mfrancza.jwtrevocationmanager.rules.Rule
-import com.mfrancza.jwtrevocationmanager.rules.StringCondition
+import com.mfrancza.jwtrevocation.rules.Rule
+import com.mfrancza.jwtrevocation.rules.StringCondition
 import java.util.UUID
 import kotlin.test.assertTrue
 import kotlin.test.Test
@@ -65,23 +65,27 @@ class InMemoryRuleStoreTest {
 
         assertTrue(ruleStore.list().isEmpty(), "Store should initially have no rules")
 
-        val firstRule = ruleStore.create(Rule(
+        val firstRule = ruleStore.create(
+            Rule(
             ruleExpires = 1667156265,
             jti = StringCondition(
                 operation = StringCondition.Operation.Equals,
                 value = "badId"
             )
-        ))
+        )
+        )
 
         assertEquals(listOf(firstRule),ruleStore.list())
 
-        val secondRule = ruleStore.create(Rule(
+        val secondRule = ruleStore.create(
+            Rule(
             ruleExpires = 1667156265,
             aud = StringCondition(
                 operation = StringCondition.Operation.Equals,
                 value = "badaud.mfrancza.com"
             )
-        ))
+        )
+        )
 
         val rules = ruleStore.list()
 
@@ -97,13 +101,15 @@ class InMemoryRuleStoreTest {
     fun testDeleteRuleExists() {
         val ruleStore = InMemoryRuleStore()
 
-        val existingRule = ruleStore.create(Rule(
+        val existingRule = ruleStore.create(
+            Rule(
             ruleExpires = 1667156265,
             jti = StringCondition(
                 operation = StringCondition.Operation.Equals,
                 value = "badId"
             )
-        ))
+        )
+        )
 
         assertEquals(existingRule, ruleStore.delete(existingRule.ruleId!!), "The deleted rule should be returned")
 

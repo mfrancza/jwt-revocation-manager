@@ -1,8 +1,8 @@
-package com.mfrancza.jwtrevocationmanager.plugins
+package com.mfrancza.jwtrevocation.manager.plugins
 
-import com.mfrancza.jwtrevocationmanager.persistence.RuleStore
-import com.mfrancza.jwtrevocationmanager.rules.Rule
-import com.mfrancza.jwtrevocationmanager.rules.RuleSet
+import com.mfrancza.jwtrevocation.manager.persistence.RuleStore
+import com.mfrancza.jwtrevocation.rules.Rule
+import com.mfrancza.jwtrevocation.rules.RuleSet
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -26,10 +26,12 @@ fun Application.configureRouting() {
             val ruleStore by inject<RuleStore>()
 
             get {
-                call.respond(RuleSet(
+                call.respond(
+                    RuleSet(
                     rules = ruleStore.list(),
                     timestamp = Instant.now().epochSecond
-                ))
+                )
+                )
             }
             post {
                 val newRule = call.receive<Rule>()

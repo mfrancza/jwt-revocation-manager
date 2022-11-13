@@ -1,7 +1,7 @@
-package com.mfrancza.jwtrevocationmanager.plugins
+package com.mfrancza.jwtrevocation.manager.plugins
 
-import com.mfrancza.jwtrevocationmanager.persistence.InMemoryRuleStore
-import com.mfrancza.jwtrevocationmanager.persistence.RuleStore
+import com.mfrancza.jwtrevocation.manager.persistence.InMemoryRuleStore
+import com.mfrancza.jwtrevocation.manager.persistence.RuleStore
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import org.koin.dsl.module

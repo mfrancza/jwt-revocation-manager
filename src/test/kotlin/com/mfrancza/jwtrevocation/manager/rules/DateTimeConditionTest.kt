@@ -1,5 +1,6 @@
-package com.mfrancza.jwtrevocationmanager.rules
+package com.mfrancza.jwtrevocation.manager.rules
 
+import com.mfrancza.jwtrevocation.rules.DateTimeCondition
 import kotlin.test.assertTrue
 import kotlin.test.Test
 import kotlin.test.assertFailsWith

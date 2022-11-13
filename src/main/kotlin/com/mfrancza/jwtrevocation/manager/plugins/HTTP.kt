@@ -1,4 +1,4 @@
-package com.mfrancza.jwtrevocationmanager.plugins
+package com.mfrancza.jwtrevocation.manager.plugins
 
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType

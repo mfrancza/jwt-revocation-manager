@@ -1,12 +1,12 @@
-package com.mfrancza.jwtrevocationmanager
+package com.mfrancza.jwtrevocation.manager
 
-import com.mfrancza.jwtrevocationmanager.plugins.configureDependencyInjection
-import com.mfrancza.jwtrevocationmanager.plugins.configureHTTP
-import com.mfrancza.jwtrevocationmanager.plugins.configureRouting
-import com.mfrancza.jwtrevocationmanager.plugins.configureSerialization
-import com.mfrancza.jwtrevocationmanager.rules.Rule
-import com.mfrancza.jwtrevocationmanager.rules.RuleSet
-import com.mfrancza.jwtrevocationmanager.rules.StringCondition
+import com.mfrancza.jwtrevocation.manager.plugins.configureDependencyInjection
+import com.mfrancza.jwtrevocation.manager.plugins.configureHTTP
+import com.mfrancza.jwtrevocation.manager.plugins.configureRouting
+import com.mfrancza.jwtrevocation.manager.plugins.configureSerialization
+import com.mfrancza.jwtrevocation.rules.Rule
+import com.mfrancza.jwtrevocation.rules.RuleSet
+import com.mfrancza.jwtrevocation.rules.StringCondition
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.delete

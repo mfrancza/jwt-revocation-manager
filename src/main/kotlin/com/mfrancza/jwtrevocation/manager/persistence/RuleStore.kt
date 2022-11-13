@@ -1,6 +1,6 @@
-package com.mfrancza.jwtrevocationmanager.persistence
+package com.mfrancza.jwtrevocation.manager.persistence
 
-import com.mfrancza.jwtrevocationmanager.rules.Rule
+import com.mfrancza.jwtrevocation.rules.Rule
 
 /**
  * Represents any mutable store for revocation rules and the basic oeprations it needs to support

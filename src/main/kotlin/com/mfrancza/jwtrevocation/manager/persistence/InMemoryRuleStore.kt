@@ -1,6 +1,6 @@
-package com.mfrancza.jwtrevocationmanager.persistence
+package com.mfrancza.jwtrevocation.manager.persistence
 
-import com.mfrancza.jwtrevocationmanager.rules.Rule
+import com.mfrancza.jwtrevocation.rules.Rule
 import java.util.UUID
 
 /**
@@ -12,7 +12,7 @@ class InMemoryRuleStore(initialRules: List<Rule> = emptyList()) : RuleStore {
     /**
      * the map used to store the values
      */
-    private val ruleMap = HashMap<String,Rule>()
+    private val ruleMap = HashMap<String, Rule>()
 
     init {
         //load the initial rules into the rule store
