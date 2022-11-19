@@ -22,9 +22,11 @@ class InMemoryRuleStoreTest {
 
         val newRule = Rule(
             ruleExpires = 1666928921,
-            iss = StringCondition(
-                operation = StringCondition.Operation.Equals,
-                value = "badissuer.mfrancza.com"
+            iss = listOf(
+                StringCondition(
+                    operation = StringCondition.Operation.Equals,
+                    value = "badissuer.mfrancza.com"
+                )
             )
         )
 
@@ -46,9 +48,11 @@ class InMemoryRuleStoreTest {
         val newRule = Rule(
             ruleId = UUID.randomUUID().toString(),
             ruleExpires = 1666928921,
-            iss = StringCondition(
-                operation = StringCondition.Operation.Equals,
-                value = "badissuer.mfrancza.com"
+            iss = listOf(
+                StringCondition(
+                    operation = StringCondition.Operation.Equals,
+                    value = "badissuer.mfrancza.com"
+                )
             )
         )
         assertFailsWith<IllegalArgumentException>( "Should throw an exception if the ID is already set") {
@@ -65,27 +69,27 @@ class InMemoryRuleStoreTest {
 
         assertTrue(ruleStore.list().isEmpty(), "Store should initially have no rules")
 
-        val firstRule = ruleStore.create(
-            Rule(
+        val firstRule = ruleStore.create(Rule(
             ruleExpires = 1667156265,
-            jti = StringCondition(
-                operation = StringCondition.Operation.Equals,
-                value = "badId"
+            jti = listOf(
+                StringCondition(
+                    operation = StringCondition.Operation.Equals,
+                    value = "badId"
+                )
             )
-        )
-        )
+        ))
 
         assertEquals(listOf(firstRule),ruleStore.list())
 
-        val secondRule = ruleStore.create(
-            Rule(
+        val secondRule = ruleStore.create(Rule(
             ruleExpires = 1667156265,
-            aud = StringCondition(
-                operation = StringCondition.Operation.Equals,
-                value = "badaud.mfrancza.com"
+            aud = listOf(
+                StringCondition(
+                    operation = StringCondition.Operation.Equals,
+                    value = "badaud.mfrancza.com"
+                )
             )
-        )
-        )
+        ))
 
         val rules = ruleStore.list()
 
@@ -101,15 +105,15 @@ class InMemoryRuleStoreTest {
     fun testDeleteRuleExists() {
         val ruleStore = InMemoryRuleStore()
 
-        val existingRule = ruleStore.create(
-            Rule(
+        val existingRule = ruleStore.create(Rule(
             ruleExpires = 1667156265,
-            jti = StringCondition(
-                operation = StringCondition.Operation.Equals,
-                value = "badId"
+            jti = listOf(
+                StringCondition(
+                    operation = StringCondition.Operation.Equals,
+                    value = "badId"
+                )
             )
-        )
-        )
+        ))
 
         assertEquals(existingRule, ruleStore.delete(existingRule.ruleId!!), "The deleted rule should be returned")
 
@@ -136,17 +140,21 @@ class InMemoryRuleStoreTest {
         val initialRules = listOf(
             Rule(
                 ruleExpires = 1667156265,
-                aud = StringCondition(
-                    operation = StringCondition.Operation.Equals,
-                    value = "badaud.mfrancza.com"
+                aud = listOf(
+                    StringCondition(
+                        operation = StringCondition.Operation.Equals,
+                        value = "badaud.mfrancza.com"
+                    )
                 )
             ),
             Rule(
                 ruleId = UUID.randomUUID().toString(),
                 ruleExpires = 1667156265,
-                iss = StringCondition(
-                    operation = StringCondition.Operation.Equals,
-                    value = "badiss.mfrancza.com"
+                iss = listOf(
+                    StringCondition(
+                        operation = StringCondition.Operation.Equals,
+                        value = "badiss.mfrancza.com"
+                    )
                 )
             )
         )

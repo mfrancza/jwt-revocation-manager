@@ -3,7 +3,10 @@ package com.mfrancza.jwtrevocation.rules
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DateTimeCondition (val operation: Operation, val value: Long?){
+data class DateTimeCondition (
+    override val operation: Operation,
+    override val value: Long?) : Condition<Long, DateTimeCondition.Operation>
+{
 
     init {
         if (value == null && !operation.acceptsNull) throw IllegalArgumentException("$operation requires a non-null value")
@@ -18,13 +21,13 @@ data class DateTimeCondition (val operation: Operation, val value: Long?){
         NotAfter(false)
     }
 
-    fun isMet(comparisonValue: Long?) : Boolean =
+    override fun isMet(value: Long?) : Boolean =
         when(operation) {
-            Operation.Equals -> comparisonValue == value
-            Operation.NotEquals -> comparisonValue != value
-            Operation.Before -> comparisonValue != null && comparisonValue < value!!
-            Operation.NotBefore -> comparisonValue != null && comparisonValue >= value!!
-            Operation.After -> comparisonValue != null && comparisonValue > value!!
-            Operation.NotAfter -> comparisonValue != null && comparisonValue <= value!!
+            Operation.Equals -> value == this.value
+            Operation.NotEquals -> value != this.value
+            Operation.Before -> value != null && value < this.value!!
+            Operation.NotBefore -> value != null && value >= this.value!!
+            Operation.After -> value != null && value > this.value!!
+            Operation.NotAfter -> value != null && value <= this.value!!
         }
 }

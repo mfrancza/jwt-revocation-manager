@@ -14,7 +14,7 @@ plugins {
 group = "com.mfrancza.jwtrevocationmanager"
 version = "0.0.1"
 application {
-    mainClass.set("com.mfrancza.jwtrevocationmanager.ApplicationKt")
+    mainClass.set("com.mfrancza.jwtrevocation.manager.ApplicationKt")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")

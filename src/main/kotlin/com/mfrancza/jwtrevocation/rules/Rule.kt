@@ -19,45 +19,57 @@ data class Rule(
      */
     val ruleExpires: Long,
     /**
-     * The condition for the iss claim
+     * The conditions for the iss claim
      */
-    val iss: StringCondition? = null,
+    val iss: List<StringCondition> = emptyList(),
     /**
-     * The condition for the sub claim
+     * The conditions for the sub claim
      */
-    val sub: StringCondition? = null,
+    val sub: List<StringCondition> = emptyList(),
     /**
      * The condition for the aud claim
      */
-    val aud: StringCondition? = null,
+    val aud: List<StringCondition> = emptyList(),
     /**
      * The condition for the exp claim
      */
-    val exp: DateTimeCondition? = null,
+    val exp: List<DateTimeCondition> = emptyList(),
     /**
      * The condition for the nbf claim
      */
-    val nbf: DateTimeCondition? = null,
+    val nbf: List<DateTimeCondition> = emptyList(),
     /**
      * The condition for the iat claim
      */
-    val iat: DateTimeCondition? = null,
+    val iat: List<DateTimeCondition> = emptyList(),
     /**
      * The condition for the jti claim
      */
-    val jti: StringCondition? = null
+    val jti: List<StringCondition> = emptyList()
 ) {
     init {
         //validate that at least one condition is specified
         if (
-            iss == null &&
-            sub == null &&
-            aud == null &&
-            exp == null &&
-            iat == null &&
-            jti == null
+            iss.isEmpty() &&
+            sub.isEmpty() &&
+            aud.isEmpty() &&
+            exp.isEmpty() &&
+            nbf.isEmpty() &&
+            iat.isEmpty() &&
+            jti.isEmpty()
         ) {
             throw IllegalArgumentException("A condition must be specified for at least one claim")
         }
     }
+
+    fun isNotMetBy(claimsSource: ClaimsSource): Condition<*, *>? =
+        iss.firstOrNull { !it.isMet(claimsSource.iss()) }
+            ?: sub.firstOrNull { !it.isMet(claimsSource.sub()) }
+            ?: aud.firstOrNull { !it.isMet(claimsSource.aud()) }
+            ?: exp.firstOrNull { !it.isMet(claimsSource.exp()) }
+            ?: nbf.firstOrNull { !it.isMet(claimsSource.nbf()) }
+            ?: iat.firstOrNull { !it.isMet(claimsSource.iat()) }
+            ?: jti.firstOrNull { !it.isMet(claimsSource.jti()) }
+
+    fun isMet(claimsSource: ClaimsSource): Boolean = (isNotMetBy(claimsSource) == null)
 }

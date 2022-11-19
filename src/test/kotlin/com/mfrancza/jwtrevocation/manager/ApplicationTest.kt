@@ -58,11 +58,14 @@ class ApplicationTest {
 
         val newIssRule = Rule(
             ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
-            iss = StringCondition(
-                operation = StringCondition.Operation.Equals,
-                value = "bad-iss.mfrancza.com"
+            iss = listOf(
+                StringCondition(
+                    operation = StringCondition.Operation.Equals,
+                    value = "bad-iss.mfrancza.com"
+                )
             )
         )
+
         client.post("/rules"){
             contentType(ContentType.Application.Json)
             setBody(newIssRule)
@@ -76,11 +79,14 @@ class ApplicationTest {
 
         val newAudRule = Rule(
             ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
-            aud = StringCondition(
-                operation = StringCondition.Operation.Equals,
-                value = "bad-aud.mfrancza.com"
+            aud = listOf(
+                StringCondition(
+                    operation = StringCondition.Operation.Equals,
+                    value = "bad-aud.mfrancza.com"
+                )
             )
         )
+
         client.post("/rules"){
             contentType(ContentType.Application.Json)
             setBody(newAudRule)
