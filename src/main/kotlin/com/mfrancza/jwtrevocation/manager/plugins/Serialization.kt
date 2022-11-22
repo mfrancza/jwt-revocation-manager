@@ -8,6 +8,6 @@ import kotlinx.serialization.json.Json
 
 fun Application.configureSerialization() {
     install(ContentNegotiation) {
-        json(Json{encodeDefaults = false})
+        json(Json { encodeDefaults = false })
     }
 }

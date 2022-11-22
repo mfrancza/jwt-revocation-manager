@@ -8,6 +8,13 @@ import com.mfrancza.jwtrevocation.rules.Rule
 import com.mfrancza.jwtrevocation.rules.RuleSet
 import com.mfrancza.jwtrevocation.rules.StringCondition
 import io.ktor.client.call.body
+import io.ktor.client.call.body
+import io.ktor.client.call.body
+import io.ktor.client.call.body
+import io.ktor.client.call.body
+import io.ktor.client.call.body
+import io.ktor.client.call.body
+import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -66,7 +73,7 @@ class ApplicationTest {
             )
         )
 
-        client.post("/rules"){
+        client.post("/rules") {
             contentType(ContentType.Application.Json)
             setBody(newIssRule)
         }.apply {
@@ -87,7 +94,7 @@ class ApplicationTest {
             )
         )
 
-        client.post("/rules"){
+        client.post("/rules") {
             contentType(ContentType.Application.Json)
             setBody(newAudRule)
         }.apply {
@@ -129,14 +136,15 @@ class ApplicationTest {
     }
 
     private fun validateExpectedRules(expectedRules: List<Rule>, actualRules: List<Rule>) {
-        assertEquals(expectedRules.size, actualRules.size,  "The number of rules should be the same")
+        assertEquals(expectedRules.size, actualRules.size, "The number of rules should be the same")
         expectedRules.forEach {
             assertContains(actualRules, it, "The expected rule should be contained in the rules")
         }
     }
+
     private fun validateTimestamp(timestamp: Long, withinSeconds: Int) {
         val secondsSinceTimestamp = Instant.now().epochSecond - timestamp
-        assertTrue( secondsSinceTimestamp >= 0, "Timestamp should be before current time")
-        assertTrue( secondsSinceTimestamp < withinSeconds, "The timestamp should be recent")
+        assertTrue(secondsSinceTimestamp >= 0, "Timestamp should be before current time")
+        assertTrue(secondsSinceTimestamp < withinSeconds, "The timestamp should be recent")
     }
 }

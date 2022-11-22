@@ -28,9 +28,9 @@ fun Application.configureRouting() {
             get {
                 call.respond(
                     RuleSet(
-                    rules = ruleStore.list(),
-                    timestamp = Instant.now().epochSecond
-                )
+                        rules = ruleStore.list(),
+                        timestamp = Instant.now().epochSecond
+                    )
                 )
             }
             post {
