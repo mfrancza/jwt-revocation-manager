@@ -1,7 +1,8 @@
 package com.mfrancza.jwtrevocation.manager.persistence
 
 import com.mfrancza.jwtrevocation.rules.Rule
-import com.mfrancza.jwtrevocation.rules.StringCondition
+import com.mfrancza.jwtrevocation.rules.conditions.StringCondition
+import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import java.util.UUID
 import kotlin.test.assertTrue
 import kotlin.test.Test
@@ -23,8 +24,7 @@ class InMemoryRuleStoreTest {
         val newRule = Rule(
             ruleExpires = 1666928921,
             iss = listOf(
-                StringCondition(
-                    operation = StringCondition.Operation.Equals,
+                StringEquals(
                     value = "badissuer.mfrancza.com"
                 )
             )
@@ -49,8 +49,7 @@ class InMemoryRuleStoreTest {
             ruleId = UUID.randomUUID().toString(),
             ruleExpires = 1666928921,
             iss = listOf(
-                StringCondition(
-                    operation = StringCondition.Operation.Equals,
+                StringEquals(
                     value = "badissuer.mfrancza.com"
                 )
             )
@@ -72,8 +71,7 @@ class InMemoryRuleStoreTest {
         val firstRule = ruleStore.create(Rule(
             ruleExpires = 1667156265,
             jti = listOf(
-                StringCondition(
-                    operation = StringCondition.Operation.Equals,
+                StringEquals(
                     value = "badId"
                 )
             )
@@ -84,8 +82,7 @@ class InMemoryRuleStoreTest {
         val secondRule = ruleStore.create(Rule(
             ruleExpires = 1667156265,
             aud = listOf(
-                StringCondition(
-                    operation = StringCondition.Operation.Equals,
+                StringEquals(
                     value = "badaud.mfrancza.com"
                 )
             )
@@ -108,8 +105,7 @@ class InMemoryRuleStoreTest {
         val existingRule = ruleStore.create(Rule(
             ruleExpires = 1667156265,
             jti = listOf(
-                StringCondition(
-                    operation = StringCondition.Operation.Equals,
+                StringEquals(
                     value = "badId"
                 )
             )
@@ -141,18 +137,14 @@ class InMemoryRuleStoreTest {
             Rule(
                 ruleExpires = 1667156265,
                 aud = listOf(
-                    StringCondition(
-                        operation = StringCondition.Operation.Equals,
-                        value = "badaud.mfrancza.com"
-                    )
+                    StringEquals("badaud.mfrancza.com")
                 )
             ),
             Rule(
                 ruleId = UUID.randomUUID().toString(),
                 ruleExpires = 1667156265,
                 iss = listOf(
-                    StringCondition(
-                        operation = StringCondition.Operation.Equals,
+                    StringEquals(
                         value = "badiss.mfrancza.com"
                     )
                 )

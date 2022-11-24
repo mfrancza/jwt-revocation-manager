@@ -1,6 +1,8 @@
 package com.mfrancza.jwtrevocation.rules
 
-import io.ktor.server.sessions.autoSerializerOf
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeAfter
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeCondition
+import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import kotlin.test.Test
@@ -18,8 +20,7 @@ class RuleSetTest {
                 Rule(
                     ruleExpires = Instant.now().epochSecond + 60,
                     exp = listOf(
-                        DateTimeCondition(
-                            DateTimeCondition.Operation.After,
+                        DateTimeAfter(
                             Instant.now().plus(1, ChronoUnit.HOURS).epochSecond
                         )
                     )
@@ -27,8 +28,7 @@ class RuleSetTest {
                 Rule(
                     ruleExpires = Instant.now().epochSecond + 60,
                     iss = listOf(
-                        StringCondition(
-                            StringCondition.Operation.Equals,
+                        StringEquals(
                             "bad-iss.mfrancza.com"
                         )
                     )
@@ -36,7 +36,7 @@ class RuleSetTest {
                 Rule(
                     ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
                     aud = listOf(
-                        StringCondition(StringCondition.Operation.Equals, "bad-aud.mfrancza.com")
+                        StringEquals("bad-aud.mfrancza.com")
                     )
                 )
             ),
@@ -60,8 +60,7 @@ class RuleSetTest {
         val expectedRule = Rule(
             ruleExpires = Instant.now().epochSecond + 60,
             iss = listOf(
-                StringCondition(
-                    StringCondition.Operation.Equals,
+                StringEquals(
                     "bad-iss.mfrancza.com"
                 )
             )
@@ -72,17 +71,14 @@ class RuleSetTest {
                 Rule(
                     ruleExpires = Instant.now().epochSecond + 60,
                     exp = listOf(
-                        DateTimeCondition(
-                            DateTimeCondition.Operation.After,
-                            Instant.now().plus(1, ChronoUnit.HOURS).epochSecond
-                        )
+                        DateTimeAfter(Instant.now().plus(1, ChronoUnit.HOURS).epochSecond)
                     ),
                 ),
                 expectedRule,
                 Rule(
                     ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
                     aud = listOf(
-                        StringCondition(StringCondition.Operation.Equals, "bad-aud.mfrancza.com")
+                        StringEquals("bad-aud.mfrancza.com")
                     )
                 )
             ),
@@ -107,8 +103,7 @@ class RuleSetTest {
                 Rule(
                     ruleExpires = Instant.now().epochSecond + 60,
                     exp = listOf(
-                        DateTimeCondition(
-                            DateTimeCondition.Operation.After,
+                        DateTimeAfter(
                             Instant.now().plus(1, ChronoUnit.HOURS).epochSecond
                         )
                     ),

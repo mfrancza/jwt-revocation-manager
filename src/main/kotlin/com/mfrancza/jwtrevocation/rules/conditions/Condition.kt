@@ -1,12 +1,9 @@
-package com.mfrancza.jwtrevocation.rules
+package com.mfrancza.jwtrevocation.rules.conditions
 
 /**
  * Generic type for conditions with different value types
  */
-sealed interface Condition<V, O> {
-    val value: V?
-    val operation: O
-
+sealed interface Condition<V> {
     /**
      * @param value the value of the claim to check the condition against
      * @return true if the value from the claim mets the condition

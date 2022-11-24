@@ -1,5 +1,9 @@
 package com.mfrancza.jwtrevocation.rules
 
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeBefore
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeCondition
+import com.mfrancza.jwtrevocation.rules.conditions.StringCondition
+import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import java.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,16 +19,12 @@ class RuleTest {
         val rule = Rule(
             ruleExpires = Instant.now().epochSecond + 60,
             iss = listOf(
-                StringCondition(
-                    StringCondition.Operation.Equals,
+                StringEquals(
                     "bad-iss.mfrancza.com"
                 )
             ),
             iat = listOf(
-                DateTimeCondition(
-                    DateTimeCondition.Operation.Before,
-                    Instant.now().epochSecond
-                )
+                DateTimeBefore(Instant.now().epochSecond)
             )
         )
 
@@ -43,16 +43,12 @@ class RuleTest {
         val rule = Rule(
             ruleExpires = Instant.now().epochSecond + 60,
             iss = listOf(
-                StringCondition(
-                    StringCondition.Operation.Equals,
+                StringEquals(
                     "bad-iss.mfrancza.com"
                 )
             ),
             iat = listOf(
-                DateTimeCondition(
-                    DateTimeCondition.Operation.Before,
-                    Instant.now().epochSecond
-                )
+                DateTimeBefore(Instant.now().epochSecond)
             )
         )
 
@@ -72,8 +68,7 @@ class RuleTest {
         val rule = Rule(
             ruleExpires = Instant.now().epochSecond + 60,
             iss = listOf(
-                StringCondition(
-                    StringCondition.Operation.Equals,
+                StringEquals(
                     "bad-iss.mfrancza.com"
                 )
             )

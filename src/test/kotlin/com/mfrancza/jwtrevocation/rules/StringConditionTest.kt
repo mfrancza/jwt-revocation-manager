@@ -1,5 +1,7 @@
 package com.mfrancza.jwtrevocation.rules
 
+import com.mfrancza.jwtrevocation.rules.conditions.StringCondition
+import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -7,12 +9,10 @@ import kotlin.test.assertTrue
 class StringConditionTest {
     @Test
     fun testEquals() {
-        val equalsConditionWithValue = StringCondition(
-            operation = StringCondition.Operation.Equals,
+        val equalsConditionWithValue = StringEquals(
             value = "BadValue"
         )
-        val equalsConditionWithNull = StringCondition(
-            operation = StringCondition.Operation.Equals,
+        val equalsConditionWithNull = StringEquals(
             value = null
         )
         assertTrue(

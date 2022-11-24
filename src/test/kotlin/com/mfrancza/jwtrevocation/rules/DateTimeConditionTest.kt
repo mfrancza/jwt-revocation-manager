@@ -1,22 +1,27 @@
 package com.mfrancza.jwtrevocation.rules
 
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeAfter
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeBefore
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeCondition
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeEquals
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeNotAfter
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeNotBefore
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeNotEquals
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlin.test.Test
-import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.serialization.json.Json
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class DateTimeConditionTest {
 
     @Test
     fun testEquals() {
-        val equalsConditionWithValue = DateTimeCondition(
-            operation = DateTimeCondition.Operation.Equals,
-            value = 1666928921
-        )
-        val equalsConditionWithNull = DateTimeCondition(
-            operation = DateTimeCondition.Operation.Equals,
-            value = null
-        )
+        val equalsConditionWithValue = DateTimeEquals(1666928921)
+        val equalsConditionWithNull = DateTimeEquals(null)
         assertTrue(
             equalsConditionWithValue.isMet(equalsConditionWithValue.value),
             "The same value meets it")
@@ -35,15 +40,21 @@ class DateTimeConditionTest {
     }
 
     @Test
+    fun testEqualsSerialization() {
+        val startingJson = "{\"operation\":\"=\",\"value\":1666928921}"
+
+        val equalsConditionWithValue = Json.decodeFromString<DateTimeCondition>(startingJson)
+
+        assertIs<DateTimeEquals>(equalsConditionWithValue, "The JSON should deserialize as an EqualsCondition")
+        assertEquals(1666928921, equalsConditionWithValue.value)
+
+        assertEquals(equalsConditionWithValue, Json.decodeFromString(Json.encodeToString(equalsConditionWithValue)), "")
+    }
+
+    @Test
     fun testNotEquals() {
-        val equalsConditionWithValue = DateTimeCondition(
-            operation = DateTimeCondition.Operation.NotEquals,
-            value = 1666928921
-        )
-        val equalsConditionWithNull = DateTimeCondition(
-            operation = DateTimeCondition.Operation.NotEquals,
-            value = null
-        )
+        val equalsConditionWithValue = DateTimeNotEquals(1666928921)
+        val equalsConditionWithNull = DateTimeNotEquals(null)
         assertFalse(
             equalsConditionWithValue.isMet(equalsConditionWithValue.value),
             "The same value does not meet it")
@@ -63,113 +74,73 @@ class DateTimeConditionTest {
 
     @Test
     fun testBefore() {
-        val equalsConditionWithValue = DateTimeCondition(
-            operation = DateTimeCondition.Operation.Before,
-            value = 1666928921
-        )
-
-        assertFailsWith(IllegalArgumentException::class, "Before should not accept a null value") {
-            DateTimeCondition(
-                operation = DateTimeCondition.Operation.Before,
-                value = null
-            )
-        }
+        val conditionWithValue = DateTimeBefore(1666928921)
 
         assertFalse(
-            equalsConditionWithValue.isMet(equalsConditionWithValue.value),
+            conditionWithValue.isMet(conditionWithValue.value),
             "The same value does not meet it")
-        assertTrue(equalsConditionWithValue.isMet(
-            equalsConditionWithValue.value!! - 10),
+        assertTrue(conditionWithValue.isMet(
+            conditionWithValue.value - 10),
             "A lower value does meet it")
-        assertFalse(equalsConditionWithValue.isMet(
-            equalsConditionWithValue.value!! + 10),
+        assertFalse(conditionWithValue.isMet(
+            conditionWithValue.value + 10),
             "A higher value does not meet it")
         assertFalse(
-            equalsConditionWithValue.isMet(null),
+            conditionWithValue.isMet(null),
             "A null value does not meet the condition")
     }
 
     @Test
     fun testNotBefore() {
-        val equalsConditionWithValue = DateTimeCondition(
-            operation = DateTimeCondition.Operation.NotBefore,
-            value = 1666928921
-        )
-
-        assertFailsWith(IllegalArgumentException::class, "NotBefore should not accept a null value") {
-            DateTimeCondition(
-                operation = DateTimeCondition.Operation.NotBefore,
-                value = null
-            )
-        }
+        val condition = DateTimeNotBefore(1666928921)
 
         assertTrue(
-            equalsConditionWithValue.isMet(equalsConditionWithValue.value),
+            condition.isMet(condition.value),
             "The same value does meet it")
-        assertFalse(equalsConditionWithValue.isMet(
-            equalsConditionWithValue.value!! - 10),
+        assertFalse(condition.isMet(
+            condition.value - 10),
             "A lower value does not meet it")
-        assertTrue(equalsConditionWithValue.isMet(
-            equalsConditionWithValue.value!! + 10),
+        assertTrue(condition.isMet(
+            condition.value + 10),
             "A higher value does meet it")
         assertFalse(
-            equalsConditionWithValue.isMet(null),
+            condition.isMet(null),
             "A null value does not meet the condition")
     }
 
     @Test
     fun testAfter() {
-        val equalsConditionWithValue = DateTimeCondition(
-            operation = DateTimeCondition.Operation.After,
-            value = 1666928921
-        )
-
-        assertFailsWith(IllegalArgumentException::class, "After should not accept a null value") {
-            DateTimeCondition(
-                operation = DateTimeCondition.Operation.After,
-                value = null
-            )
-        }
+        val condition = DateTimeAfter(1666928921)
 
         assertFalse(
-            equalsConditionWithValue.isMet(equalsConditionWithValue.value),
+            condition.isMet(condition.value),
             "The same value does not meet it")
-        assertFalse(equalsConditionWithValue.isMet(
-            equalsConditionWithValue.value!! - 10),
+        assertFalse(condition.isMet(
+            condition.value - 10),
             "A lower value does not meet it")
-        assertTrue(equalsConditionWithValue.isMet(
-            equalsConditionWithValue.value!! + 10),
+        assertTrue(condition.isMet(
+            condition.value + 10),
             "A higher value does meet it")
         assertFalse(
-            equalsConditionWithValue.isMet(null),
+            condition.isMet(null),
             "A null value does not meet the condition")
     }
 
     @Test
     fun testNotAfter() {
-        val equalsConditionWithValue = DateTimeCondition(
-            operation = DateTimeCondition.Operation.NotAfter,
-            value = 1666928921
-        )
-
-        assertFailsWith(IllegalArgumentException::class, "NotAfter should not accept a null value") {
-            DateTimeCondition(
-                operation = DateTimeCondition.Operation.NotAfter,
-                value = null
-            )
-        }
+        val condition = DateTimeNotAfter(1666928921)
 
         assertTrue(
-            equalsConditionWithValue.isMet(equalsConditionWithValue.value),
+            condition.isMet(condition.value),
             "The same value does meet it")
-        assertTrue(equalsConditionWithValue.isMet(
-            equalsConditionWithValue.value!! - 10),
+        assertTrue(condition.isMet(
+            condition.value - 10),
             "A lower value does meet it")
-        assertFalse(equalsConditionWithValue.isMet(
-            equalsConditionWithValue.value!! + 10),
+        assertFalse(condition.isMet(
+            condition.value + 10),
             "A higher value does not meet it")
         assertFalse(
-            equalsConditionWithValue.isMet(null),
+            condition.isMet(null),
             "A null value does not meet the condition")
     }
 }

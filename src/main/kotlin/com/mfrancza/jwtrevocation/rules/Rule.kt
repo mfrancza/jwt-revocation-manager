@@ -1,5 +1,8 @@
 package com.mfrancza.jwtrevocation.rules
 
+import com.mfrancza.jwtrevocation.rules.conditions.Condition
+import com.mfrancza.jwtrevocation.rules.conditions.DateTimeCondition
+import com.mfrancza.jwtrevocation.rules.conditions.StringCondition
 import kotlinx.serialization.Serializable
 
 /**
@@ -62,7 +65,7 @@ data class Rule(
         }
     }
 
-    fun isNotMetBy(claimsSource: ClaimsSource): Condition<*, *>? =
+    fun isNotMetBy(claimsSource: ClaimsSource): Condition<*>? =
         iss.firstOrNull { !it.isMet(claimsSource.iss()) }
             ?: sub.firstOrNull { !it.isMet(claimsSource.sub()) }
             ?: aud.firstOrNull { !it.isMet(claimsSource.aud()) }

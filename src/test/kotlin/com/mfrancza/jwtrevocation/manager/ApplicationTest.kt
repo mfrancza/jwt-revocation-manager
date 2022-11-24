@@ -6,14 +6,8 @@ import com.mfrancza.jwtrevocation.manager.plugins.configureRouting
 import com.mfrancza.jwtrevocation.manager.plugins.configureSerialization
 import com.mfrancza.jwtrevocation.rules.Rule
 import com.mfrancza.jwtrevocation.rules.RuleSet
-import com.mfrancza.jwtrevocation.rules.StringCondition
-import io.ktor.client.call.body
-import io.ktor.client.call.body
-import io.ktor.client.call.body
-import io.ktor.client.call.body
-import io.ktor.client.call.body
-import io.ktor.client.call.body
-import io.ktor.client.call.body
+import com.mfrancza.jwtrevocation.rules.conditions.StringCondition
+import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.delete
@@ -66,8 +60,7 @@ class ApplicationTest {
         val newIssRule = Rule(
             ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
             iss = listOf(
-                StringCondition(
-                    operation = StringCondition.Operation.Equals,
+                StringEquals(
                     value = "bad-iss.mfrancza.com"
                 )
             )
@@ -87,8 +80,7 @@ class ApplicationTest {
         val newAudRule = Rule(
             ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
             aud = listOf(
-                StringCondition(
-                    operation = StringCondition.Operation.Equals,
+                StringEquals(
                     value = "bad-aud.mfrancza.com"
                 )
             )
