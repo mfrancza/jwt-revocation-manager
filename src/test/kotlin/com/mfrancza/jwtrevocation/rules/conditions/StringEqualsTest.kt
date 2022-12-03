@@ -1,12 +1,10 @@
-package com.mfrancza.jwtrevocation.rules
+package com.mfrancza.jwtrevocation.rules.conditions
 
-import com.mfrancza.jwtrevocation.rules.conditions.StringCondition
-import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class StringConditionTest {
+class StringEqualsTest {
     @Test
     fun testEquals() {
         val equalsConditionWithValue = StringEquals(
