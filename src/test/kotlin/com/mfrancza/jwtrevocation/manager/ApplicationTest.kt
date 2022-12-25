@@ -6,7 +6,6 @@ import com.mfrancza.jwtrevocation.manager.plugins.configureRouting
 import com.mfrancza.jwtrevocation.manager.plugins.configureSerialization
 import com.mfrancza.jwtrevocation.rules.Rule
 import com.mfrancza.jwtrevocation.rules.RuleSet
-import com.mfrancza.jwtrevocation.rules.conditions.StringCondition
 import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -52,10 +51,16 @@ class ApplicationTest {
         //check initial contents of rule store
         client.get("/rules").apply {
             assertEquals(HttpStatusCode.OK, status)
+            val rules = this.body<List<Rule>>()
+            validateExpectedRules(expectedRules, rules)
+        }
+        client.get("/ruleset").apply {
+            assertEquals(HttpStatusCode.OK, status)
             val ruleSet = this.body<RuleSet>()
             validateTimestamp(ruleSet.timestamp, ruleRefreshFrequencySeconds)
             validateExpectedRules(expectedRules, ruleSet.rules)
         }
+
 
         val newIssRule = Rule(
             ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
@@ -100,6 +105,11 @@ class ApplicationTest {
         //check that the retrieved rules match the created ones
         client.get("/rules").apply {
             assertEquals(HttpStatusCode.OK, status)
+            val rules = this.body<List<Rule>>()
+            validateExpectedRules(expectedRules, rules)
+        }
+        client.get("/ruleset").apply {
+            assertEquals(HttpStatusCode.OK, status)
             val ruleSet = this.body<RuleSet>()
             validateTimestamp(ruleSet.timestamp, ruleRefreshFrequencySeconds)
             validateExpectedRules(expectedRules, ruleSet.rules)
@@ -120,6 +130,11 @@ class ApplicationTest {
 
         //verify it is no longer included in the results
         client.get("/rules").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            val rules = this.body<List<Rule>>()
+            validateExpectedRules(expectedRules, rules)
+        }
+        client.get("/ruleset").apply {
             assertEquals(HttpStatusCode.OK, status)
             val ruleSet = this.body<RuleSet>()
             validateTimestamp(ruleSet.timestamp, ruleRefreshFrequencySeconds)

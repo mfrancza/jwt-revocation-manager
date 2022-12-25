@@ -13,8 +13,7 @@ import io.ktor.serialization.kotlinx.json.json
 /**
  * Retrieves a ruleset from an HTTP endpoint which provides it as JSON
  */
-class RuleSetHttpClient(ruleServerUrl: String, engine: HttpClientEngine) {
-    private val url = Url(ruleServerUrl)
+class RuleSetHttpClient(private val ruleServerUrl: String, engine: HttpClientEngine) {
 
     private val httpClient = HttpClient(engine) {
         install(ContentNegotiation) {
@@ -22,5 +21,5 @@ class RuleSetHttpClient(ruleServerUrl: String, engine: HttpClientEngine) {
         }
     }
 
-    suspend fun ruleSet() : RuleSet = httpClient.get { url {takeFrom(url)} }.body()
+    suspend fun ruleSet() : RuleSet = httpClient.get { url {takeFrom(ruleServerUrl)} }.body()
 }

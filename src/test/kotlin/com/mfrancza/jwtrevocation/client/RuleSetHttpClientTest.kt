@@ -29,7 +29,7 @@ class RuleSetHttpClientTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        val client = RuleSetHttpClient("https://mfrancza.com/rules", mockEngine)
+        val client = RuleSetHttpClient("https://mfrancza.com/ruleset", mockEngine)
 
         assertEquals(expectedRuleSet, client.ruleSet(), "The returned rule set should match the one from the server")
     }
