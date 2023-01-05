@@ -4,6 +4,7 @@ import com.mfrancza.jwtrevocation.rules.RuleSet
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.request.get
 import io.ktor.http.Url
 import io.ktor.http.takeFrom
@@ -19,6 +20,7 @@ class RuleSetHttpClient(private val ruleServerUrl: String, engine: HttpClientEng
         install(ContentNegotiation) {
             json()
         }
+        install(HttpCache)
     }
 
     suspend fun ruleSet() : RuleSet = httpClient.get { url {takeFrom(ruleServerUrl)} }.body()

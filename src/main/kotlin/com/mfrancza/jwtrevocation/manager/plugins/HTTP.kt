@@ -25,14 +25,6 @@ fun Application.configureHTTP() {
             minimumSize(1024) // condition
         }
     }
-    install(CachingHeaders) {
-        options { call, outgoingContent ->
-            when (outgoingContent.contentType?.withoutParameters()) {
-                ContentType.Text.CSS -> CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 24 * 60 * 60), ZonedDateTime.now().plusDays(2))
-                else -> null
-            }
-        }
-    }
     install(DefaultHeaders) {
         header("X-Engine", "Ktor") // will send this header with each response
     }
