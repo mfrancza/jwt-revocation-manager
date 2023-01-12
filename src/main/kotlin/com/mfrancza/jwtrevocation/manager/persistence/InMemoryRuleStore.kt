@@ -20,7 +20,7 @@ class InMemoryRuleStore(initialRules: List<Rule> = emptyList()) : RuleStore {
             if (rule.ruleId == null) {
                 create(rule)
             } else {
-                ruleMap[rule.ruleId]=rule
+                ruleMap[rule.ruleId!!]=rule
             }
         }
     }
