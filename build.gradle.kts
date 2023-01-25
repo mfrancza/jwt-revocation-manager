@@ -1,15 +1,15 @@
-val ktor_version: String by project
-val kotlin_version: String by project
-val logback_version: String by project
-val prometeus_version: String by project
-val koin_version: String by project
-val coroutines_version: String by project
+val ktor_version = "2.2.2"
+val kotlin_version = "1.8.0"
+val logback_version = "1.2.11"
+val prometeus_version = "1.6.3"
+val koin_version = "3.2.2"
+val coroutines_version = "1.6.4"
 
 plugins {
     application
-    kotlin("jvm") version "1.7.20"
-    id("io.ktor.plugin") version "2.1.3"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.20"
+    kotlin("jvm") version "1.8.0"
+    id("io.ktor.plugin") version "2.2.2"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.0"
 }
 
 group = "com.mfrancza.jwtrevocationmanager"
