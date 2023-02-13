@@ -1,13 +1,15 @@
 package com.mfrancza.jwtrevocation.manager
 
-import com.mfrancza.jwtrevocation.manager.plugins.configureDependencyInjection
-import com.mfrancza.jwtrevocation.manager.plugins.configureHTTP
-import com.mfrancza.jwtrevocation.manager.plugins.configureRouting
-import com.mfrancza.jwtrevocation.manager.plugins.configureSerialization
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
+import com.mfrancza.jwtrevocation.manager.plugins.SecuritySettings
 import com.mfrancza.jwtrevocation.rules.Rule
 import com.mfrancza.jwtrevocation.rules.RuleSet
 import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import io.ktor.client.call.body
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -20,6 +22,7 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.testing.testApplication
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -27,21 +30,39 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class ApplicationTest {
+
     @Test
     fun testRuleManagement() = testApplication {
+        val issuer = "testIssuer"
+        val audience = "testAudience"
+        val jwtSecret = "testSecret"
 
         val ruleRefreshFrequencySeconds = 10
 
-        application {
-            configureDependencyInjection()
-            configureSerialization()
-            configureHTTP()
-            configureRouting()
-        }
+        application(makeJwtRevocationManager(
+            SecuritySettings(
+                audience,
+                issuer,
+                SecuritySettings.HS256(jwtSecret)
+            )
+        ))
+
+        val token = JWT.create()
+            .withAudience(audience)
+            .withIssuer(issuer)
+            .withExpiresAt(Date(System.currentTimeMillis() + 60000))
+            .sign(Algorithm.HMAC256(jwtSecret))
 
         val client = createClient {
             install(ContentNegotiation) {
                 json()
+            }
+            install(Auth) {
+                bearer {
+                    loadTokens {
+                        BearerTokens(token, "NotUsed")
+                    }
+                }
             }
         }
 
