@@ -2,12 +2,17 @@ package com.mfrancza.jwtrevocation.manager.plugins
 
 import com.auth0.jwk.JwkProviderBuilder
 import com.auth0.jwt.JWT
+import io.ktor.http.HttpMethod
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.jwt.JWTAuthenticationProvider
+import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
+import io.ktor.server.request.httpMethod
+import io.ktor.server.request.path
+import io.ktor.server.routing.routing
 import java.util.concurrent.TimeUnit
 
 /**
@@ -81,12 +86,29 @@ data class SecuritySettings(
 
 }
 
+/**
+ * validates that the token's scope claim contains a value with method:path for the request
+ * @param jwt jwt to validate
+ * @param method method of the request
+ * @param path path of the request
+ * @return true if the claim contains the required scope
+ */
+fun JWTPrincipal.hasScope(scope: String) : Boolean {
+    val claim = payload.getClaim("scope")
+    if (claim.isNull) return false
+    return claim.asString()
+        .splitToSequence(" ").toSet()
+        .contains(scope)
+}
+
 fun Application.configureSecurity(settings : SecuritySettings) {
     install(Authentication) {
             jwt("auth-jwt") {
                 realm = settings.realm
                 settings.setVerifier(this)
-                validate { JWTPrincipal(it.payload) }
+                validate {
+                    JWTPrincipal(it.payload)
+                }
             }
     }
 }

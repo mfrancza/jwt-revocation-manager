@@ -47,9 +47,11 @@ class ApplicationTest {
             )
         ))
 
+        //get a token with access to all the methods
         val token = JWT.create()
             .withAudience(audience)
             .withIssuer(issuer)
+            .withClaim("scope", "GET:/ruleset GET:/rules POST:/rules GET:/rules/{ruleId} DELETE:/rules/{ruleId}")
             .withExpiresAt(Date(System.currentTimeMillis() + 60000))
             .sign(Algorithm.HMAC256(jwtSecret))
 
@@ -83,6 +85,7 @@ class ApplicationTest {
         }
 
 
+        //create a couple rules
         val newIssRule = Rule(
             ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
             iss = listOf(
@@ -91,7 +94,6 @@ class ApplicationTest {
                 )
             )
         )
-
         client.post("/rules") {
             contentType(ContentType.Application.Json)
             setBody(newIssRule)
@@ -111,7 +113,6 @@ class ApplicationTest {
                 )
             )
         )
-
         client.post("/rules") {
             contentType(ContentType.Application.Json)
             setBody(newAudRule)
@@ -160,6 +161,52 @@ class ApplicationTest {
             val ruleSet = this.body<RuleSet>()
             validateTimestamp(ruleSet.timestamp, ruleRefreshFrequencySeconds)
             validateExpectedRules(expectedRules, ruleSet.rules)
+        }
+
+        //get a token with access to only GET methods
+        val readOnlyToken = JWT.create()
+            .withAudience(audience)
+            .withIssuer(issuer)
+            .withClaim("scope", "GET:/ruleset GET:/rules GET:/rules/{ruleId}")
+            .withExpiresAt(Date(System.currentTimeMillis() + 60000))
+            .sign(Algorithm.HMAC256(jwtSecret))
+
+        val readOnlyClient = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+            install(Auth) {
+                bearer {
+                    loadTokens {
+                        BearerTokens(readOnlyToken, "NotUsed")
+                    }
+                }
+            }
+        }
+
+        //get the ruleset
+        readOnlyClient.get("/ruleset").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            val ruleSet = this.body<RuleSet>()
+            validateTimestamp(ruleSet.timestamp, ruleRefreshFrequencySeconds)
+            validateExpectedRules(expectedRules, ruleSet.rules)
+        }
+
+        //try to delete a rule, which should result in a 403 since the client only has read permissions
+        readOnlyClient.delete("/rules/${expectedRules.first().ruleId}").apply {
+            assertEquals(HttpStatusCode.Forbidden, status)
+        }
+
+        //create an unauthenticated client
+        val unauthenticatedClient = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        //getting the ruleset should return a 401 since the client is unauthenticated
+        unauthenticatedClient.get("/ruleset").apply {
+            assertEquals(HttpStatusCode.Unauthorized, status)
         }
     }
 
