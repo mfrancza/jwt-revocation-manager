@@ -208,6 +208,32 @@ class ApplicationTest {
         unauthenticatedClient.get("/ruleset").apply {
             assertEquals(HttpStatusCode.Unauthorized, status)
         }
+
+        //create a rule revoking tokens for the client's issuer
+        val ownIssRule = Rule(
+            ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
+            iss = listOf(
+                StringEquals(
+                    value = issuer
+                )
+            )
+        )
+        client.post("/rules") {
+            contentType(ContentType.Application.Json)
+            setBody(ownIssRule)
+        }.apply {
+            assertEquals(HttpStatusCode.OK, status)
+            val createdRule = call.body<Rule>()
+            expectedRules.add(createdRule)
+            assertNotNull(createdRule.ruleId)
+            assertEquals(createdRule.copy(ruleId = null), ownIssRule)
+        }
+
+        //getting the ruleset should return a 401 since the client's token is revoked by the rule
+        client.get("/ruleset").apply {
+            assertEquals(HttpStatusCode.Unauthorized, status)
+        }
+
     }
 
     private fun validateExpectedRules(expectedRules: List<Rule>, actualRules: List<Rule>) {

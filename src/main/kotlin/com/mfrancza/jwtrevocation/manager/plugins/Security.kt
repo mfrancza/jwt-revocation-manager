@@ -2,17 +2,17 @@ package com.mfrancza.jwtrevocation.manager.plugins
 
 import com.auth0.jwk.JwkProviderBuilder
 import com.auth0.jwt.JWT
-import io.ktor.http.HttpMethod
+import com.mfrancza.jwtrevocation.manager.persistence.RuleStore
+import com.mfrancza.jwtrevocation.ktor.server.auth.notRevoked
+import com.mfrancza.jwtrevocation.ktor.server.auth.toPrincipal
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.jwt.JWTAuthenticationProvider
-import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
-import io.ktor.server.request.httpMethod
 import io.ktor.server.request.path
-import io.ktor.server.routing.routing
+import org.koin.ktor.ext.inject
 import java.util.concurrent.TimeUnit
 
 /**
@@ -81,9 +81,6 @@ data class SecuritySettings(
                 .build())
         }
     }
-
-
-
 }
 
 /**
@@ -102,12 +99,14 @@ fun JWTPrincipal.hasScope(scope: String) : Boolean {
 }
 
 fun Application.configureSecurity(settings : SecuritySettings) {
+    val ruleStore by inject<RuleStore>()
+
     install(Authentication) {
             jwt("auth-jwt") {
                 realm = settings.realm
                 settings.setVerifier(this)
                 validate {
-                    JWTPrincipal(it.payload)
+                    it.notRevoked(ruleStore.ruleSet())?.toPrincipal()
                 }
             }
     }

@@ -22,6 +22,10 @@ application {
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -29,6 +33,7 @@ repositories {
 
 dependencies {
     implementation("com.mfrancza:jwt-revocation-rules-jvm:1.0-SNAPSHOT")
+    implementation("com.mfrancza:jwt-revocation-ktor-server-auth:1.0-SNAPSHOT")
 
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")

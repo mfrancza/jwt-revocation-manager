@@ -1,6 +1,8 @@
 package com.mfrancza.jwtrevocation.manager.persistence
 
 import com.mfrancza.jwtrevocation.rules.Rule
+import com.mfrancza.jwtrevocation.rules.RuleSet
+import java.time.Instant
 
 /**
  * Represents any mutable store for revocation rules and the basic oeprations it needs to support
@@ -32,4 +34,12 @@ interface RuleStore {
      * @return a list containing all the rules
      */
     fun list() : List<Rule>
+
+    /**
+     * Returns a RuleSet created from the current contents of the RuleStore
+     */
+    fun ruleSet() : RuleSet = RuleSet(
+        rules = this.list(),
+        timestamp = Instant.now().epochSecond
+    )
 }
