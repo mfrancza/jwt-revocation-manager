@@ -79,6 +79,7 @@ class ApplicationTest {
         }
         client.get("/ruleset").apply {
             assertEquals(HttpStatusCode.OK, status)
+            assertTrue(this.headers.contains("Cache-Control"))
             val ruleSet = this.body<RuleSet>()
             validateTimestamp(ruleSet.timestamp, ruleRefreshFrequencySeconds)
             validateExpectedRules(expectedRules, ruleSet.rules)

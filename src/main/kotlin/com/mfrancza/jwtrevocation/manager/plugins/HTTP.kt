@@ -2,7 +2,7 @@ package com.mfrancza.jwtrevocation.manager.plugins
 
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
-import io.ktor.server.http.content.CachingOptions
+import io.ktor.http.content.CachingOptions
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.plugins.cachingheaders.CachingHeaders
@@ -12,7 +12,6 @@ import io.ktor.server.plugins.compression.gzip
 import io.ktor.server.plugins.compression.minimumSize
 import io.ktor.server.plugins.conditionalheaders.ConditionalHeaders
 import io.ktor.server.plugins.defaultheaders.DefaultHeaders
-import java.time.ZonedDateTime
 
 fun Application.configureHTTP() {
     install(ConditionalHeaders)
@@ -25,7 +24,6 @@ fun Application.configureHTTP() {
             minimumSize(1024) // condition
         }
     }
-    install(DefaultHeaders) {
-        header("X-Engine", "Ktor") // will send this header with each response
-    }
+    install(DefaultHeaders) {}
+    install(CachingHeaders) {}
 }

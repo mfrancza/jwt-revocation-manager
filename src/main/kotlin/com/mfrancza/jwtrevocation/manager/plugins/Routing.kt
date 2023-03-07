@@ -47,6 +47,7 @@ fun Application.configureRouting() {
                         )
                         call.caching = CachingOptions(CacheControl.MaxAge(5))
                         call.respond(ruleSet)
+                        call.response.headers.allValues().forEach { name: String, values: List<String> -> println("$name $values") }
                     }
                 }
             }
