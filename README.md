@@ -14,9 +14,32 @@ The JWT Revocation Manager instead uses rules to express which tokens should not
 
 ## How
 
-## Running the Server
+## Running the Application
 
-In the current, pre-release state, ./gradlew run is the recommended way to launch the server.
+The application supports the packaging and deployment options described at https://ktor.io/docs/deploy.html.
+
+* run - runs the server locally
+* buildFatJar - builds a fat JAR with the application's dependencies
+* buildImage - builds a docker image for running the application
+
+### Environment Variables
+
+The server is configured using the below environment variables
+
+* JRM_SECURITY_ISSUER - the expected issuer for JWT tokens; if it does not match, the API will return that the call is unauthorized
+* JRM_SECURITY_AUDIENCE - the expected audience for JWT tokens; if it does not match, the API will return that the call is unauthorized
+
+## Calling the Management API
+
+Currently, there is no official client library or user interface, but a postman collection documenting the API is included in the postman directory.
+
+## Using RuleSets to Revoke JWTs
+
+The /ruleset endpoint is intended to be called by clients using the rules to check for revoked tokens.
+
+The jwt-revocation-ruleset package provides a multiplatform Kotlin client library that provides authorization and caching.
+
+The jwt-revocation-ktor-server-auth package provides convenience functions for validating JWTCredentials from io.ktor:ktor-server-auth-jwt-jvm.
 
 ## When
 
@@ -41,4 +64,3 @@ Scope
 * IaC Templates
 * Load Testing
 * RuleSet Scalability
-* Incremental 

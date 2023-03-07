@@ -1,0 +1,529 @@
+{
+	"info": {
+		"_postman_id": "7f04b9a3-f2d0-4184-a78f-83c15fd613ba",
+		"name": "JWT Revocation Manager",
+		"description": "# API for the JWT Revocation Manager\n\n## Authorization\n\nThe JWT Revocation Manager users a JWT passed as a Bearer token The scope claim must match the value for the route, which is in METHOD:path format, such as GET:/ruleset.\n\nUsing an OAuth2.0 provider to manage the access token is recommended as OAuth2.0 flows will be supported in client applications developed in this project.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16993370"
+	},
+	"item": [
+		{
+			"name": "/ruleset",
+			"item": [
+				{
+					"name": "GET",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverUrl}}/ruleset",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"ruleset"
+							]
+						},
+						"description": "Returns the current RuleSet. Calculated RuleSets may be cached on the server, so changes may not immediately be reflected. Provides a Cache-Control header to inform client caching.\n\n###### Permission\n\nGET:/ruleset"
+					},
+					"response": [
+						{
+							"name": "GET",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/ruleset",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"ruleset"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Mar 2023 03:32:27 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Ktor/2.2.2"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "max-age=5"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"rules\": [\n        {\n            \"ruleId\": \"1bbe5415-4469-480e-b4ab-ac2447387270\",\n            \"ruleExpires\": 1778156822,\n            \"iss\": [\n                {\n                    \"operation\": \"=\",\n                    \"value\": \"https://bad-issuer.mfrancza.com/\"\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"17698438-f386-45e4-8cf4-a4af75afe82e\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        }\n    ],\n    \"timestamp\": 1678159947\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "/rules",
+			"item": [
+				{
+					"name": "{ruleId}",
+					"item": [
+						{
+							"name": "GET",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverUrl}}/rules/{{ruleId}}",
+									"host": [
+										"{{serverUrl}}"
+									],
+									"path": [
+										"rules",
+										"{{ruleId}}"
+									]
+								},
+								"description": "Gets a single Rule with ruleId."
+							},
+							"response": [
+								{
+									"name": "GET",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/rules/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"rules",
+												""
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Tue, 07 Mar 2023 02:58:11 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Ktor/2.2.2"
+										},
+										{
+											"key": "Content-Length",
+											"value": "188"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"ruleId\": \"3f311665-2f32-4ce9-acca-089248fa11e3\",\n    \"ruleExpires\": 1778156822,\n    \"iss\": [\n        {\n            \"operation\": \"=\",\n            \"value\": \"https://bad-issuer.mfrancza.com/\"\n        }\n    ],\n    \"iat\": [\n        {\n            \"operation\": \"<\",\n            \"value\": 1678156822\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "DELETE",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{serverUrl}}/rules/{{ruleId}}",
+									"host": [
+										"{{serverUrl}}"
+									],
+									"path": [
+										"rules",
+										"{{ruleId}}"
+									]
+								},
+								"description": "Deletes the rule with ruleId. Returns the deleted Rule."
+							},
+							"response": [
+								{
+									"name": "DELETE",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/rules/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"rules",
+												""
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Tue, 07 Mar 2023 02:58:24 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Ktor/2.2.2"
+										},
+										{
+											"key": "Content-Length",
+											"value": "188"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"ruleId\": \"3f311665-2f32-4ce9-acca-089248fa11e3\",\n    \"ruleExpires\": 1778156822,\n    \"iss\": [\n        {\n            \"operation\": \"=\",\n            \"value\": \"https://bad-issuer.mfrancza.com/\"\n        }\n    ],\n    \"iat\": [\n        {\n            \"operation\": \"<\",\n            \"value\": 1678156822\n        }\n    ]\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "GET",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverUrl}}/rules",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"rules"
+							]
+						},
+						"description": "Lists the rules."
+					},
+					"response": [
+						{
+							"name": "GET",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/rules",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rules"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Mar 2023 02:57:41 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Ktor/2.2.2"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"ruleId\": \"22c73b85-e02b-4d55-9c9e-054fd8387f41\",\n        \"ruleExpires\": 1778156822,\n        \"iat\": [\n            {\n                \"operation\": \"<\",\n                \"value\": 1678156822\n            }\n        ]\n    },\n    {\n        \"ruleId\": \"3f311665-2f32-4ce9-acca-089248fa11e3\",\n        \"ruleExpires\": 1778156822,\n        \"iss\": [\n            {\n                \"operation\": \"=\",\n                \"value\": \"https://bad-issuer.mfrancza.com/\"\n            }\n        ],\n        \"iat\": [\n            {\n                \"operation\": \"<\",\n                \"value\": 1678156822\n            }\n        ]\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "POST",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ruleExpires\": 1778156822,\r\n    \"iat\": [\r\n        {\r\n            \"operation\": \"<\",\r\n            \"value\": 1678156822\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/rules",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"rules"
+							]
+						},
+						"description": "Creates a new Rule. The ruleId is generated by the server and must not be specified in the request."
+					},
+					"response": [
+						{
+							"name": "POST",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"ruleExpires\": 1778156822,\r\n    \"iss\": [\r\n        {\r\n            \"operation\": \"=\",\r\n            \"value\": \"https://bad-issuer.mfrancza.com/\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/rules",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"rules"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Mar 2023 02:46:59 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Ktor/2.2.2"
+								},
+								{
+									"key": "Content-Length",
+									"value": "143"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ruleId\": \"b9eb48ba-ba85-4f02-b73b-eb25a37c3d7b\",\n    \"ruleExpires\": 1778156822,\n    \"iss\": [\n        {\n            \"operation\": \"=\",\n            \"value\": \"https://bad-issuer.mfrancza.com/\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "POST",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"ruleExpires\": 1778156822,\r\n    \"iat\": [\r\n        {\r\n            \"operation\": \"<\",\r\n            \"value\": 1678156822\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serverUrl}}/rules",
+									"host": [
+										"{{serverUrl}}"
+									],
+									"path": [
+										"rules"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Mar 2023 02:55:58 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Ktor/2.2.2"
+								},
+								{
+									"key": "Content-Length",
+									"value": "119"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"ruleId\": \"22c73b85-e02b-4d55-9c9e-054fd8387f41\",\n    \"ruleExpires\": 1778156822,\n    \"iat\": [\n        {\n            \"operation\": \"<\",\n            \"value\": 1678156822\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "/metrics-micrometer",
+			"item": [
+				{
+					"name": "GET",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverUrl}}/metrics-micrometer",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"metrics-micrometer"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint for scraping micrometer metrics."
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessTokenUrl",
+				"value": "{{accessTokenUrl}}",
+				"type": "string"
+			},
+			{
+				"key": "audience",
+				"value": {
+					"bc6b48ac-87e2-473a-8a29-4714b32e99b2": "http://localhost/"
+				},
+				"type": "any"
+			},
+			{
+				"key": "client_authentication",
+				"value": "body",
+				"type": "string"
+			},
+			{
+				"key": "scope",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{clientSecret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{clientId}}",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "client_credentials",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ruleId",
+			"value": "{ruleId}",
+			"type": "string"
+		}
+	]
+}
