@@ -5,9 +5,14 @@ import com.mfrancza.jwtrevocation.rules.RuleSet
 import java.time.Instant
 
 /**
- * Represents any mutable store for revocation rules and the basic oeprations it needs to support
+ * Represents any mutable store for revocation rules and the basic operations it needs to support
  */
 interface RuleStore {
+    /**
+     * initializes the RuleStore; called once to initialize the backing data store
+     */
+    fun initialize()
+
     /**
      * creates a new rule
      * the rule store is responsible for assigning the ID and should not accept a rule that already has it defined

@@ -8,10 +8,10 @@ import com.mfrancza.jwtrevocation.manager.plugins.configureMonitoring
 import com.mfrancza.jwtrevocation.manager.plugins.configureRouting
 import com.mfrancza.jwtrevocation.manager.plugins.configureSecurity
 import com.mfrancza.jwtrevocation.manager.plugins.configureSerialization
+import com.mfrancza.jwtrevocation.manager.plugins.makeRuleStore
 import io.ktor.server.application.Application
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-
 
 
 fun makeJwtRevocationManager(securitySettings: SecuritySettings, dataStoreSettings: DataStoreSettings) : Application.() -> Unit {
@@ -36,6 +36,10 @@ fun main() {
         user = System.getenv("JRM_DATA_STORE_USER") ?: "",
         password = System.getenv("JRM_DATA_STORE_PASSWORD") ?: ""
     )
+
+    if (System.getenv("JRM_INITIALIZE") == "true") {
+        makeRuleStore(dataStoreSettings).initialize()
+    }
 
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = makeJwtRevocationManager(
         securitySettings,

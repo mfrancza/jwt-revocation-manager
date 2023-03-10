@@ -39,7 +39,7 @@ class JDBCRuleStore(url: String, user: String = "", password: String = "") : Rul
         override val primaryKey = PrimaryKey(ruleId)
     }
 
-    fun initialize() {
+    override fun initialize() {
         transaction(db) {
             SchemaUtils.create(Rules)
         }

@@ -25,6 +25,9 @@ class InMemoryRuleStore(initialRules: List<Rule> = emptyList()) : RuleStore {
         }
     }
 
+    override fun initialize() {
+    }
+
     override fun create(newRule: Rule) : Rule {
         if (newRule.ruleId != null) {
             throw IllegalArgumentException("New rules must not have a ruleId set")

@@ -15,17 +15,22 @@ data class DataStoreSettings(
     val password: String
 )
 
+/**
+ * Makes a RuleStore based on the provided settings
+ */
+fun makeRuleStore(dataStoreSettings: DataStoreSettings) = when(dataStoreSettings.url.split(":").first()) {
+    "in-memory" -> InMemoryRuleStore()
+    "jdbc" -> JDBCRuleStore(dataStoreSettings.url, dataStoreSettings.user, dataStoreSettings.password)
+    else -> throw IllegalArgumentException("No supported data store for URL ${dataStoreSettings.url}")
+}
+
 fun Application.configureDependencyInjection(dataStoreSettings: DataStoreSettings) {
     install(Koin) {
         slf4jLogger()
         modules(
             module {
                 single<RuleStore> {
-                    when(dataStoreSettings.url.split(":").first()) {
-                        "in-memory" -> InMemoryRuleStore().also { logger.info("Using InMemoryRuleStore") }
-                        "jdbc" -> JDBCRuleStore(dataStoreSettings.url, dataStoreSettings.user, dataStoreSettings.password).also{ logger.info("Using JDBCRuleStore")}
-                        else -> throw IllegalArgumentException("No supported data store for URL ${dataStoreSettings.url}")
-                    }
+                    makeRuleStore(dataStoreSettings)
                 }
             }
         )

@@ -37,6 +37,10 @@ The server is configured using the below environment variables
 * JRM_DATA_STORE_USER - the user to authenticate to the datastore as
 * JRM_DATA_STORE_PASSWORD - the password for the user
 
+## Initializing the Application
+
+To initialize the data store, set JRM_INITIALIZE when running the application.  Only a single instance should be started this way.
+
 ## Calling the Management API
 
 Currently, there is no official client library or user interface, but a postman collection documenting the API is included in the postman directory.
