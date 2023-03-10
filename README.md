@@ -26,8 +26,16 @@ The application supports the packaging and deployment options described at https
 
 The server is configured using the below environment variables
 
+#### Security
+
 * JRM_SECURITY_ISSUER - the expected issuer for JWT tokens; if it does not match, the API will return that the call is unauthorized
 * JRM_SECURITY_AUDIENCE - the expected audience for JWT tokens; if it does not match, the API will return that the call is unauthorized
+
+#### Data Store
+
+* JRM_DATA_STORE_URL - The URL of the data store to use; currently supports "in-memory" and JDBC connection strings; only drivers for postgres are automatically included in the class path
+* JRM_DATA_STORE_USER - the user to authenticate to the datastore as
+* JRM_DATA_STORE_PASSWORD - the password for the user
 
 ## Calling the Management API
 

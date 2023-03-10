@@ -2,6 +2,7 @@ package com.mfrancza.jwtrevocation.manager
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.mfrancza.jwtrevocation.manager.plugins.DataStoreSettings
 import com.mfrancza.jwtrevocation.manager.plugins.SecuritySettings
 import com.mfrancza.jwtrevocation.rules.Rule
 import com.mfrancza.jwtrevocation.rules.RuleSet
@@ -44,6 +45,11 @@ class ApplicationTest {
                 audience,
                 issuer,
                 SecuritySettings.HS256(jwtSecret)
+            ),
+            DataStoreSettings(
+                "in-memory",
+                "",
+                ""
             )
         ))
 

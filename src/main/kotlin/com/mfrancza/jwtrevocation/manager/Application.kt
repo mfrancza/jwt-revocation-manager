@@ -1,5 +1,6 @@
 package com.mfrancza.jwtrevocation.manager
 
+import com.mfrancza.jwtrevocation.manager.plugins.DataStoreSettings
 import com.mfrancza.jwtrevocation.manager.plugins.SecuritySettings
 import com.mfrancza.jwtrevocation.manager.plugins.configureDependencyInjection
 import com.mfrancza.jwtrevocation.manager.plugins.configureHTTP
@@ -13,9 +14,9 @@ import io.ktor.server.netty.Netty
 
 
 
-fun makeJwtRevocationManager(securitySettings: SecuritySettings) : Application.() -> Unit {
+fun makeJwtRevocationManager(securitySettings: SecuritySettings, dataStoreSettings: DataStoreSettings) : Application.() -> Unit {
     return {
-        configureDependencyInjection()
+        configureDependencyInjection(dataStoreSettings)
         configureSecurity(securitySettings)
         configureSerialization()
         configureHTTP()
@@ -30,9 +31,15 @@ fun main() {
         audience = System.getenv("JRM_SECURITY_AUDIENCE"),
         verification = SecuritySettings.RS256
     )
+    val dataStoreSettings = DataStoreSettings(
+        url = System.getenv("JRM_DATA_STORE_URL") ?: "in-memory",
+        user = System.getenv("JRM_DATA_STORE_USER") ?: "",
+        password = System.getenv("JRM_DATA_STORE_PASSWORD") ?: ""
+    )
 
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = makeJwtRevocationManager(
-        securitySettings
+        securitySettings,
+        dataStoreSettings
     )) .start(wait = true)
 }
 
