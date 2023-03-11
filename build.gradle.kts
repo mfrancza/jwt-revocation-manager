@@ -1,3 +1,5 @@
+import java.net.URI
+
 val ktor_version = "2.2.2"
 val kotlin_version = "1.8.0"
 val logback_version = "1.2.11"
@@ -11,6 +13,7 @@ plugins {
     kotlin("jvm") version "1.8.0"
     id("io.ktor.plugin") version "2.2.2"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.0"
+    id("maven-publish")
 }
 
 group = "com.mfrancza.jwtrevocationmanager"
@@ -28,6 +31,20 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 repositories {
     mavenLocal()
+    maven {
+        url = uri("https://maven.pkg.github.com/mfrancza/jwt-revocation-rules")
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("TOKEN")
+        }
+    }
+    maven {
+        url = uri("https://maven.pkg.github.com/mfrancza/jwt-revocation-ktor-server-auth")
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("TOKEN")
+        }
+    }
     mavenCentral()
 }
 
@@ -67,4 +84,17 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.postgresql:postgresql:42.5.4")
     testImplementation("com.h2database:h2:2.1.214")
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = URI("https://maven.pkg.github.com/mfrancza/jwt-revocation-manager")
+            credentials {
+                username = System.getenv("USERNAME")
+                password = System.getenv("TOKEN")
+            }
+        }
+    }
 }
