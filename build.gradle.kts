@@ -87,6 +87,11 @@ dependencies {
 }
 
 publishing {
+    publications {
+        create<MavenPublication>("jwt-revocation-manager") {
+            from(components["java"])
+        }
+    }
     repositories {
         maven {
             name = "GitHubPackages"
