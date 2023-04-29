@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "com.mfrancza.jwtrevocationmanager"
-version = "1.0.0"
+version = "1.1.0-SNAPSHOT"
 application {
     mainClass.set("com.mfrancza.jwtrevocation.manager.ApplicationKt")
 
@@ -49,8 +49,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.mfrancza:jwt-revocation-rules-jvm:1.0.0")
-    implementation("com.mfrancza:jwt-revocation-ktor-server-auth:1.0.0")
+    implementation("com.mfrancza:jwt-revocation-rules-jvm:1.1.0-SNAPSHOT")
+    implementation("com.mfrancza:jwt-revocation-ktor-server-auth:1.1.0-SNAPSHOT")
 
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
