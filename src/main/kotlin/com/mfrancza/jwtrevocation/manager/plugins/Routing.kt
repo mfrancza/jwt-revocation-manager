@@ -42,7 +42,7 @@ fun Application.configureRouting() {
                 get {
                     validateScope("GET:/ruleset") {
                         val ruleSet = RuleSet(
-                            rules = ruleStore.list(),
+                            rules = ruleStore.list().rules,
                             timestamp = Instant.now().epochSecond
                         )
                         call.caching = CachingOptions(CacheControl.MaxAge(5))
@@ -55,7 +55,7 @@ fun Application.configureRouting() {
                 get {
                     validateScope( "GET:/rules") {
                         call.respond(
-                            ruleStore.list()
+                            ruleStore.list().rules
                         )
                     }
                 }

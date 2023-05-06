@@ -34,17 +34,24 @@ interface RuleStore {
      */
     fun delete(ruleId: String) : Rule?
 
+    data class PartialList(
+        val rules: List<Rule>,
+        val cursor: String?
+    )
+
     /**
-     * Lists all the rules in the data store
-     * @return a list containing all the rules
+     * Lists the rules in the data store
+     * @param cursor a cursor pointing to the first rule to return, with null corresponding to the first rule; format is implementation-dependent
+     * @param limit the maximum number of rules to return
+     * @return a list containing all the rules and a cursor pointing to the next rule if there are additional rules
      */
-    fun list() : List<Rule>
+    fun list(cursor: String? = null, limit: Int? = null) : PartialList
 
     /**
      * Returns a RuleSet created from the current contents of the RuleStore
      */
     fun ruleSet() : RuleSet = RuleSet(
-        rules = this.list(),
+        rules = this.list().rules,
         timestamp = Instant.now().epochSecond
     )
 }

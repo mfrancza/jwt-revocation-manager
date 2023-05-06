@@ -46,7 +46,27 @@ class InMemoryRuleStore(initialRules: List<Rule> = emptyList()) : RuleStore {
         return ruleMap.remove(ruleId)
     }
 
-    override fun list(): List<Rule> {
-       return ruleMap.values.toList()
+    override fun list(cursor: String?, limit: Int?): RuleStore.PartialList {
+        val start = cursor?.toInt() ?: 0
+        val rules = ruleMap.values.toList()
+        val end = if (limit != null) {
+            val max = start + limit
+            if (max < rules.size) {
+                max
+            } else {
+                rules.size
+            }
+        } else {
+            rules.size
+        }
+
+        return RuleStore.PartialList(
+            rules = rules.subList(start, end),
+            cursor = if (limit != null && rules.size > limit) {
+                end.toString()
+            } else {
+                null
+            }
+        )
     }
 }

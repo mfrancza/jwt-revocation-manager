@@ -104,10 +104,36 @@ class JDBCRuleStore(url: String, user: String = "", password: String = "") : Rul
         return rule
     }
 
-    override fun list(): List<Rule> {
-        return transaction(db) {
-            Rules.selectAll().map { rowToRule(it) }
+    override fun list(cursor: String?, limit: Int?): RuleStore.PartialList {
+        val offset = cursor?.toInt() ?: 0
+        val rules = transaction(db) {
+            Rules.selectAll()
+                .orderBy(Rules.ruleId)
+                .let {
+                    if (limit != null) {
+                        it.limit(limit, offset.toLong())
+                    } else {
+                        it
+                    }
+                }
+                .map { rowToRule(it) }
+                .let {
+                    if (limit == null) {
+                        it.subList(offset, it.size)
+                    } else {
+                        it
+                    }
+                }
         }
+
+        return RuleStore.PartialList(
+            rules,
+            if (limit != null && rules.size == limit) {
+                (offset + limit).toString()
+            } else {
+                null
+            }
+        )
     }
 
 }

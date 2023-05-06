@@ -39,7 +39,7 @@ class InMemoryRuleStoreTest : RuleStoreTest() {
             )
         )
 
-        val rules = InMemoryRuleStore(initialRules).list()
+        val rules = InMemoryRuleStore(initialRules).list().rules
 
         assertEquals(2, rules.size, "Both rules should be present")
 

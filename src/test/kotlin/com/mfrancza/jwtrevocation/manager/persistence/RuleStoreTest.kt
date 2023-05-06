@@ -65,17 +65,39 @@ abstract class RuleStoreTest {
             jti = listOf(StringEquals(value = "badId"))
         ))
 
-        assertContains(ruleStore.list(), firstRule)
+        assertContains(ruleStore.list().rules, firstRule)
 
         val secondRule = ruleStore.create(Rule(
             ruleExpires = 1667156265,
             aud = listOf(StringEquals(value = "badaud.mfrancza.com"))
         ))
 
-        val rules = ruleStore.list()
+        val rules = ruleStore.list().rules
 
-        assertContains(rules,firstRule, "List should contain the first rule")
-        assertContains(rules,secondRule, "List should contain the second rule")
+        assertContains(rules, firstRule, "List should contain the first rule")
+        assertContains(rules, secondRule, "List should contain the second rule")
+
+        for(i in 0..10) {
+            ruleStore.create(Rule(
+                ruleExpires = 1667156265,
+                iss = listOf(StringEquals(value = "badiss${i.toString()}.mfrancza.com"))
+            ))
+        }
+
+        val firstTwoPartialList = ruleStore.list(cursor = null, limit = 2)
+        assertEquals(2, firstTwoPartialList.rules.size, "No more than the limit should be returned")
+        assertNotNull(firstTwoPartialList.cursor, "A cursor should be returned if not all the items have been listed")
+
+        val nextFivePartialList = ruleStore.list(cursor = firstTwoPartialList.cursor, limit = 5)
+        assertEquals(5, nextFivePartialList.rules.size, "No more than the limit should be returned")
+        assertNotNull(nextFivePartialList.cursor, "A cursor should be returned if not all the items have been listed")
+        for (rule in firstTwoPartialList.rules) {
+            assertFalse(nextFivePartialList.rules.contains(rule), "Already returned rules should not be repeated")
+        }
+
+        val remainingPartialList = ruleStore.list(cursor = nextFivePartialList.cursor, limit = 100)
+        assertNull(remainingPartialList.cursor, "A cursor should not be returned if all the items have been listed")
+
     }
 
     /**
@@ -92,7 +114,7 @@ abstract class RuleStoreTest {
 
         assertNull(ruleStore.read(existingRule.ruleId!!), "The rule should no longer be read")
 
-        assertFalse(ruleStore.list().contains(existingRule), "The rule should no longer be listed")
+        assertFalse(ruleStore.list().rules.contains(existingRule), "The rule should no longer be listed")
     }
 
     /**
