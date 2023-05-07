@@ -33,12 +33,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/ruleset",
-									"protocol": "http",
+									"raw": "{{serverUrl}}/ruleset",
 									"host": [
-										"localhost"
+										"{{serverUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"ruleset"
 									]
@@ -114,15 +112,13 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "http://localhost:8080/rules/",
-											"protocol": "http",
+											"raw": "{{serverUrl}}/rules/{{ruleId}}",
 											"host": [
-												"localhost"
+												"{{serverUrl}}"
 											],
-											"port": "8080",
 											"path": [
 												"rules",
-												""
+												"{{ruleId}}"
 											]
 										}
 									},
@@ -180,15 +176,13 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "http://localhost:8080/rules/",
-											"protocol": "http",
+											"raw": "{{serverUrl}}/rules/{{ruleId}}",
 											"host": [
-												"localhost"
+												"{{serverUrl}}"
 											],
-											"port": "8080",
 											"path": [
 												"rules",
-												""
+												"{{ruleId}}"
 											]
 										}
 									},
@@ -236,6 +230,20 @@
 							],
 							"path": [
 								"rules"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "maximum number of rules to return",
+									"disabled": true
+								},
+								{
+									"key": "cursor",
+									"value": "5",
+									"description": "cursor to the next rule to return; format depends on the rule data source",
+									"disabled": true
+								}
 							]
 						},
 						"description": "Lists the rules."
@@ -247,14 +255,26 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/rules",
-									"protocol": "http",
+									"raw": "{{serverUrl}}/rules",
 									"host": [
-										"localhost"
+										"{{serverUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"rules"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5",
+											"description": "maximum number of rules to return",
+											"disabled": true
+										},
+										{
+											"key": "cursor",
+											"value": "5",
+											"description": "cursor to the next rule to return; format depends on the rule data source",
+											"disabled": true
+										}
 									]
 								}
 							},
@@ -264,7 +284,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Tue, 07 Mar 2023 02:57:41 GMT"
+									"value": "Sun, 07 May 2023 00:43:22 GMT"
 								},
 								{
 									"key": "Server",
@@ -288,7 +308,126 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"ruleId\": \"22c73b85-e02b-4d55-9c9e-054fd8387f41\",\n        \"ruleExpires\": 1778156822,\n        \"iat\": [\n            {\n                \"operation\": \"<\",\n                \"value\": 1678156822\n            }\n        ]\n    },\n    {\n        \"ruleId\": \"3f311665-2f32-4ce9-acca-089248fa11e3\",\n        \"ruleExpires\": 1778156822,\n        \"iss\": [\n            {\n                \"operation\": \"=\",\n                \"value\": \"https://bad-issuer.mfrancza.com/\"\n            }\n        ],\n        \"iat\": [\n            {\n                \"operation\": \"<\",\n                \"value\": 1678156822\n            }\n        ]\n    }\n]"
+							"body": "{\n    \"rules\": [\n        {\n            \"ruleId\": \"b85ea767-f62c-4bfd-9f18-719ab179f320\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"0a7b615a-47eb-4496-ac62-9abf9fab8e14\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"da7c0f7d-32a0-4674-b8e5-fce7cc63fed8\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"06575081-bf67-4d73-b223-ebcd34eaba8f\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"d107e27f-f9bc-4cb1-a995-a333b3a3c98c\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"ae7463d7-48a1-4161-a9cd-6799a3f20a98\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"43842b57-7f91-482a-a0b3-f053db4f51a9\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        }\n    ],\n    \"cursor\": null\n}"
+						},
+						{
+							"name": "GET",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverUrl}}/rules?limit=5",
+									"host": [
+										"{{serverUrl}}"
+									],
+									"path": [
+										"rules"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5",
+											"description": "maximum number of rules to return"
+										},
+										{
+											"key": "cursor",
+											"value": "5",
+											"description": "cursor to the next rule to return; format depends on the rule data source",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 07 May 2023 00:43:35 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Ktor/2.2.2"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"rules\": [\n        {\n            \"ruleId\": \"b85ea767-f62c-4bfd-9f18-719ab179f320\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"0a7b615a-47eb-4496-ac62-9abf9fab8e14\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"da7c0f7d-32a0-4674-b8e5-fce7cc63fed8\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"06575081-bf67-4d73-b223-ebcd34eaba8f\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"d107e27f-f9bc-4cb1-a995-a333b3a3c98c\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        }\n    ],\n    \"cursor\": \"5\"\n}"
+						},
+						{
+							"name": "GET",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serverUrl}}/rules?limit=5&cursor=5",
+									"host": [
+										"{{serverUrl}}"
+									],
+									"path": [
+										"rules"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "5",
+											"description": "maximum number of rules to return"
+										},
+										{
+											"key": "cursor",
+											"value": "5",
+											"description": "cursor to the next rule to return; format depends on the rule data source"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 07 May 2023 00:43:58 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Ktor/2.2.2"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "transfer-encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"rules\": [\n        {\n            \"ruleId\": \"ae7463d7-48a1-4161-a9cd-6799a3f20a98\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        },\n        {\n            \"ruleId\": \"43842b57-7f91-482a-a0b3-f053db4f51a9\",\n            \"ruleExpires\": 1778156822,\n            \"iat\": [\n                {\n                    \"operation\": \"<\",\n                    \"value\": 1678156822\n                }\n            ]\n        }\n    ],\n    \"cursor\": null\n}"
 						}
 					]
 				},
@@ -333,12 +472,10 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/rules",
-									"protocol": "http",
+									"raw": "{{serverUrl}}/rules",
 									"host": [
-										"localhost"
+										"{{serverUrl}}"
 									],
-									"port": "8080",
 									"path": [
 										"rules"
 									]

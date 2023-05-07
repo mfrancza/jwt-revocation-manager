@@ -1,5 +1,6 @@
 package com.mfrancza.jwtrevocation.manager.persistence
 
+import com.mfrancza.jwtrevocation.manager.api.PartialList
 import com.mfrancza.jwtrevocation.rules.Rule
 import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import kotlinx.serialization.encodeToString
@@ -104,7 +105,7 @@ class JDBCRuleStore(url: String, user: String = "", password: String = "") : Rul
         return rule
     }
 
-    override fun list(cursor: String?, limit: Int?): RuleStore.PartialList {
+    override fun list(cursor: String?, limit: Int?): PartialList {
         val offset = cursor?.toInt() ?: 0
         val rules = transaction(db) {
             Rules.selectAll()
@@ -126,7 +127,7 @@ class JDBCRuleStore(url: String, user: String = "", password: String = "") : Rul
                 }
         }
 
-        return RuleStore.PartialList(
+        return PartialList(
             rules,
             if (limit != null && rules.size == limit) {
                 (offset + limit).toString()

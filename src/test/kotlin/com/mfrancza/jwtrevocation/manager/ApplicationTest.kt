@@ -2,6 +2,8 @@ package com.mfrancza.jwtrevocation.manager
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.mfrancza.jwtrevocation.manager.api.PartialList
+import com.mfrancza.jwtrevocation.manager.persistence.RuleStore
 import com.mfrancza.jwtrevocation.manager.plugins.DataStoreSettings
 import com.mfrancza.jwtrevocation.manager.plugins.SecuritySettings
 import com.mfrancza.jwtrevocation.rules.Rule
@@ -12,10 +14,8 @@ import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.delete
-import io.ktor.client.request.get
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
@@ -24,11 +24,7 @@ import io.ktor.server.testing.testApplication
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.Date
-import kotlin.test.Test
-import kotlin.test.assertContains
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class ApplicationTest {
 
@@ -80,7 +76,7 @@ class ApplicationTest {
         //check initial contents of rule store
         client.get("/rules").apply {
             assertEquals(HttpStatusCode.OK, status)
-            val rules = this.body<List<Rule>>()
+            val rules = this.body<PartialList>().rules
             validateExpectedRules(expectedRules, rules)
         }
         client.get("/ruleset").apply {
@@ -134,9 +130,29 @@ class ApplicationTest {
         //check that the retrieved rules match the created ones
         client.get("/rules").apply {
             assertEquals(HttpStatusCode.OK, status)
-            val rules = this.body<List<Rule>>()
-            validateExpectedRules(expectedRules, rules)
+            val partialList = this.body<PartialList>()
+            assertNull(partialList.cursor, "No rules should remain")
+            validateExpectedRules(expectedRules, partialList.rules)
         }
+
+        //get the rules in two pages
+        val firstPartialList = client.get("/rules") {
+            this.parameter("limit", "1")
+        }.apply {
+            assertEquals(HttpStatusCode.OK, status)
+        }.body<PartialList>()
+        assertNotNull(firstPartialList.cursor, "Cursor should point to remaining Rules")
+
+        val secondPartialList = client.get("/rules") {
+            this.parameter("limit", "100")
+            this.parameter("cursor", firstPartialList.cursor)
+        }.apply {
+            assertEquals(HttpStatusCode.OK, status)
+        }.body<PartialList>()
+        assertNull(secondPartialList.cursor, "No record should remain for the cursor to point to")
+
+        validateExpectedRules(expectedRules, firstPartialList.rules.plus(secondPartialList.rules))
+
         client.get("/ruleset").apply {
             assertEquals(HttpStatusCode.OK, status)
             val ruleSet = this.body<RuleSet>()
@@ -160,7 +176,7 @@ class ApplicationTest {
         //verify it is no longer included in the results
         client.get("/rules").apply {
             assertEquals(HttpStatusCode.OK, status)
-            val rules = this.body<List<Rule>>()
+            val rules = this.body<PartialList>().rules
             validateExpectedRules(expectedRules, rules)
         }
         client.get("/ruleset").apply {

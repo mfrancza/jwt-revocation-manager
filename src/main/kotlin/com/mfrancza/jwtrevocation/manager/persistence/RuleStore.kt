@@ -1,5 +1,6 @@
 package com.mfrancza.jwtrevocation.manager.persistence
 
+import com.mfrancza.jwtrevocation.manager.api.PartialList
 import com.mfrancza.jwtrevocation.rules.Rule
 import com.mfrancza.jwtrevocation.rules.RuleSet
 import java.time.Instant
@@ -34,10 +35,6 @@ interface RuleStore {
      */
     fun delete(ruleId: String) : Rule?
 
-    data class PartialList(
-        val rules: List<Rule>,
-        val cursor: String?
-    )
 
     /**
      * Lists the rules in the data store

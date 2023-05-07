@@ -1,5 +1,6 @@
 package com.mfrancza.jwtrevocation.manager.persistence
 
+import com.mfrancza.jwtrevocation.manager.api.PartialList
 import com.mfrancza.jwtrevocation.rules.Rule
 import java.util.UUID
 
@@ -46,9 +47,17 @@ class InMemoryRuleStore(initialRules: List<Rule> = emptyList()) : RuleStore {
         return ruleMap.remove(ruleId)
     }
 
-    override fun list(cursor: String?, limit: Int?): RuleStore.PartialList {
+    override fun list(cursor: String?, limit: Int?): PartialList {
         val start = cursor?.toInt() ?: 0
         val rules = ruleMap.values.toList()
+
+        if (start > rules.size - 1) {
+            return PartialList(
+                emptyList(),
+                null
+            )
+        }
+
         val end = if (limit != null) {
             val max = start + limit
             if (max < rules.size) {
@@ -60,9 +69,9 @@ class InMemoryRuleStore(initialRules: List<Rule> = emptyList()) : RuleStore {
             rules.size
         }
 
-        return RuleStore.PartialList(
+        return PartialList(
             rules = rules.subList(start, end),
-            cursor = if (limit != null && rules.size > limit) {
+            cursor = if (limit != null && end < rules.size) {
                 end.toString()
             } else {
                 null

@@ -12,6 +12,7 @@ import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
+import io.ktor.server.plugins.*
 import io.ktor.server.plugins.cachingheaders.caching
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -47,15 +48,20 @@ fun Application.configureRouting() {
                         )
                         call.caching = CachingOptions(CacheControl.MaxAge(5))
                         call.respond(ruleSet)
-                        call.response.headers.allValues().forEach { name: String, values: List<String> -> println("$name $values") }
                     }
                 }
             }
             route("/rules") {
                 get {
                     validateScope( "GET:/rules") {
+                        val cursor = call.request.queryParameters["cursor"]
+                        val limit = try {
+                            call.request.queryParameters["limit"]?.toInt()
+                        } catch(e : NumberFormatException) {
+                            throw BadRequestException("limit must be an integer", e)
+                        }
                         call.respond(
-                            ruleStore.list().rules
+                            ruleStore.list(cursor, limit)
                         )
                     }
                 }
