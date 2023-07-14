@@ -45,6 +45,10 @@ To initialize the data store, set JRM_INITIALIZE when running the application.  
 
 Currently, there is no official client library or user interface, but a postman collection documenting the API is included in the postman directory.
 
+### Authorization
+
+The API uses JWT access tokens for authorization.  To authorize calls to a route, add a string to the scope claim as METHOD:/path, for example "POST:/rules"
+
 ## Using RuleSets to Revoke JWTs
 
 The /ruleset endpoint is intended to be called by clients using the rules to check for revoked tokens.
@@ -55,18 +59,9 @@ The jwt-revocation-ktor-server-auth package provides convenience functions for v
 
 ## When
 
-### MVP Phase - In Progress
+### Current Version
 
-Phase 1's scope is the minimum viable application - defining the minimum set of components to make the application useful.  It will be delivered together.
-
-Scope
-* API Endpoints
-* Client Authorization
-* JDBC Data Stores
-* Instructions on how to manage API by scripts
-* Kotlin Ruleset Client and Ktor server component
-* Containerization for Server
-* Integration Tests
+Version 1.x provides the basic functionality necessary to manage and evaluate rules in Kotlin applications.  The API is still unstable but the goal is to stabilize it by version 2.0 and publish the packages to public repositories.
 
 ### Upcoming
 
