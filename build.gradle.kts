@@ -18,6 +18,11 @@ plugins {
 
 group = "com.mfrancza.jwtrevocationmanager"
 version = "1.1.0-SNAPSHOT"
+
+kotlin {
+    jvmToolchain(17)
+}
+
 application {
     mainClass.set("com.mfrancza.jwtrevocation.manager.ApplicationKt")
 
@@ -25,9 +30,6 @@ application {
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
 
 repositories {
     mavenLocal()
