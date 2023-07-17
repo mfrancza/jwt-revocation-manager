@@ -92,7 +92,7 @@ data class SecuritySettings(
  */
 fun JWTPrincipal.hasScope(scope: String) : Boolean {
     val claim = payload.getClaim("scope")
-    if (claim.isNull) return false
+    if (claim.isMissing || claim.isNull) return false
     return claim.asString()
         .splitToSequence(" ").toSet()
         .contains(scope)

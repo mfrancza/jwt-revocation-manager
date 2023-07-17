@@ -1,11 +1,9 @@
 package com.mfrancza.jwtrevocation.manager.plugins
 
+import com.auth0.jwt.JWT
 import com.auth0.jwt.exceptions.InvalidClaimException
-import com.auth0.jwt.impl.NullClaim
 import com.auth0.jwt.interfaces.Claim
 import com.auth0.jwt.interfaces.Payload
-import com.typesafe.config.ConfigException.Null
-import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.JWTPrincipal
 import java.util.Date
 import kotlin.test.Test
@@ -23,6 +21,11 @@ class SecurityTest {
         override fun isNull(): Boolean {
             return false
         }
+
+        override fun isMissing(): Boolean {
+            return false
+        }
+
         override fun asBoolean(): Boolean {
             throw InvalidClaimException("Claim is String")
         }
@@ -84,7 +87,56 @@ class SecurityTest {
                 TODO("Not yet implemented")
             }
             override fun getClaim(name: String?): Claim {
-                return claims[name] ?: NullClaim()
+                return claims[name] ?: object : Claim {
+                    override fun isNull(): Boolean {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun isMissing(): Boolean {
+                        return true
+                    }
+
+                    override fun asBoolean(): Boolean {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun asInt(): Int {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun asLong(): Long {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun asDouble(): Double {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun asString(): String {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun asDate(): Date {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun <T : Any?> asArray(clazz: Class<T>?): Array<T> {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun <T : Any?> asList(clazz: Class<T>?): MutableList<T> {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun asMap(): MutableMap<String, Any> {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun <T : Any?> `as`(clazz: Class<T>?): T {
+                        TODO("Not yet implemented")
+                    }
+
+                }
             }
             override fun getClaims(): MutableMap<String, Claim> {
                 return claims
@@ -112,7 +164,56 @@ class SecurityTest {
 
     @Test
     fun hasScopeReturnsFalseIfTheTokenHasANullScopeClaim(){
-        val jwt = getTestToken(mutableMapOf("scope" to NullClaim()))
+        val jwt = getTestToken(mutableMapOf("scope" to object : Claim {
+            override fun isNull(): Boolean {
+                return true
+            }
+
+            override fun isMissing(): Boolean {
+                return false
+            }
+
+            override fun asBoolean(): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun asInt(): Int {
+                TODO("Not yet implemented")
+            }
+
+            override fun asLong(): Long {
+                TODO("Not yet implemented")
+            }
+
+            override fun asDouble(): Double {
+                TODO("Not yet implemented")
+            }
+
+            override fun asString(): String {
+                TODO("Not yet implemented")
+            }
+
+            override fun asDate(): Date {
+                TODO("Not yet implemented")
+            }
+
+            override fun <T : Any?> asArray(clazz: Class<T>?): Array<T> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <T : Any?> asList(clazz: Class<T>?): MutableList<T> {
+                TODO("Not yet implemented")
+            }
+
+            override fun asMap(): MutableMap<String, Any> {
+                TODO("Not yet implemented")
+            }
+
+            override fun <T : Any?> `as`(clazz: Class<T>?): T {
+                TODO("Not yet implemented")
+            }
+
+        }))
         assertFalse(jwt.hasScope("GET:/rules"), "Should return false when the value is not in the scope")
     }
 }
