@@ -20,7 +20,7 @@ group = "com.mfrancza.jwtrevocationmanager"
 version = "1.1.0-SNAPSHOT"
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(11)
 }
 
 application {
