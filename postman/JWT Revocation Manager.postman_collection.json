@@ -587,6 +587,37 @@
 				}
 			],
 			"description": "Endpoint for scraping micrometer metrics."
+		},
+		{
+			"name": "/revoked",
+			"item": [
+				{
+					"name": "POST",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverUrl}}/verify",
+							"host": [
+								"{{serverUrl}}"
+							],
+							"path": [
+								"verify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {

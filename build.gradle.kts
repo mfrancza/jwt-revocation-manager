@@ -16,7 +16,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.mfrancza.jwtrevocationmanager"
+group = "io.github.mfrancza.jwtrevocationmanager"
 version = "1.1.0-SNAPSHOT"
 
 kotlin {
@@ -51,7 +51,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.mfrancza:jwt-revocation-rules-jvm:1.1.0-SNAPSHOT")
+    implementation("io.github.mfrancza:jwt-revocation-rules-jvm:1.2.0-SNAPSHOT")
     implementation("com.mfrancza:jwt-revocation-ktor-server-auth:1.1.0-SNAPSHOT")
 
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")

@@ -6,6 +6,7 @@ import com.mfrancza.jwtrevocation.manager.api.PartialList
 import com.mfrancza.jwtrevocation.manager.persistence.RuleStore
 import com.mfrancza.jwtrevocation.manager.plugins.DataStoreSettings
 import com.mfrancza.jwtrevocation.manager.plugins.SecuritySettings
+import com.mfrancza.jwtrevocation.rules.Claims
 import com.mfrancza.jwtrevocation.rules.Rule
 import com.mfrancza.jwtrevocation.rules.RuleSet
 import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
@@ -53,7 +54,7 @@ class ApplicationTest {
         val token = JWT.create()
             .withAudience(audience)
             .withIssuer(issuer)
-            .withClaim("scope", "GET:/ruleset GET:/rules POST:/rules GET:/rules/{ruleId} DELETE:/rules/{ruleId}")
+            .withClaim("scope", "GET:/ruleset GET:/rules POST:/rules GET:/rules/{ruleId} DELETE:/rules/{ruleId} POST:/revoked")
             .withExpiresAt(Date(System.currentTimeMillis() + 60000))
             .sign(Algorithm.HMAC256(jwtSecret))
 
@@ -153,7 +154,9 @@ class ApplicationTest {
 
         validateExpectedRules(expectedRules, firstPartialList.rules.plus(secondPartialList.rules))
 
-        client.get("/ruleset").apply {
+        // retrieve the ruleset
+
+        val ruleSet = client.get("/ruleset").apply {
             assertEquals(HttpStatusCode.OK, status)
             val ruleSet = this.body<RuleSet>()
             validateTimestamp(ruleSet.timestamp, ruleRefreshFrequencySeconds)
@@ -164,6 +167,31 @@ class ApplicationTest {
                     assertEquals(it, this.body(), "The rule returned individually should match the one in the rule set")
                 }
             }
+        }
+
+        // compare results of validate and local copy of RuleSet
+
+        val revokedClaims = Claims(
+            iss = "bad-iss.mfrancza.com"
+        )
+        val validClaims = Claims(
+            iss = "good-iss.mfrancza.com"
+        )
+
+        client.post("/revoked") {
+            contentType(ContentType.Application.Json)
+            setBody(revokedClaims)
+        }.apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertTrue(call.body<Boolean>(), "The Claims with the bad issuer should be revoked")
+        }
+
+        client.post("/revoked") {
+            contentType(ContentType.Application.Json)
+            setBody(validClaims)
+        }.apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertFalse(call.body<Boolean>(), "The Claims with the good issuer should not be revoked")
         }
 
         //delete one of the rules

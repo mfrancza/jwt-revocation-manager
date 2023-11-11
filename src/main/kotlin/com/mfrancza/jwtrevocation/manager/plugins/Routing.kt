@@ -1,6 +1,7 @@
 package com.mfrancza.jwtrevocation.manager.plugins
 
 import com.mfrancza.jwtrevocation.manager.persistence.RuleStore
+import com.mfrancza.jwtrevocation.rules.Claims
 import com.mfrancza.jwtrevocation.rules.Rule
 import com.mfrancza.jwtrevocation.rules.RuleSet
 import io.ktor.http.CacheControl
@@ -39,6 +40,20 @@ fun Application.configureRouting() {
                 }
                 block()
             }
+            route("/revoked") {
+                post {
+                    validateScope("POST:/revoked") {
+                        val claims = call.receive<Claims>()
+                        val isMet = RuleSet(
+                            rules = ruleStore.list().rules,
+                            timestamp = Instant.now().epochSecond
+                        ).isMet(claims)
+                        call.caching = CachingOptions(CacheControl.MaxAge(5))
+                        call.respond(isMet)
+                    }
+                }
+            }
+
             route("/ruleset") {
                 get {
                     validateScope("GET:/ruleset") {
