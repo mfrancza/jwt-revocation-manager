@@ -51,8 +51,8 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.mfrancza:jwt-revocation-rules-jvm:1.2.0-SNAPSHOT")
-    implementation("com.mfrancza:jwt-revocation-ktor-server-auth:1.1.0-SNAPSHOT")
+    implementation("io.github.mfrancza:jwt-revocation-rules-jvm:1.2.0")
+    implementation("io.github.mfrancza:jwt-revocation-ktor-server-auth:1.1.0")
 
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
