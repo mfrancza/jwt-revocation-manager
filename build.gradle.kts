@@ -5,7 +5,7 @@ val kotlin_version = "1.9.25"
 val logback_version = "1.2.11"
 val prometeus_version = "1.6.3"
 val koin_version = "3.2.2"
-val exposedVersion = "0.40.1"
+val exposedVersion = "0.53.0"
 
 plugins {
     application
@@ -83,8 +83,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation("org.postgresql:postgresql:42.5.4")
-    testImplementation("com.h2database:h2:2.2.220")
+    implementation("org.postgresql:postgresql:42.7.11")
+    testImplementation("com.h2database:h2:2.3.232")
 }
 
 publishing {
