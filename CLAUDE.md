@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Common Commands
 
-Built with Gradle (Kotlin DSL) on a JDK 11 toolchain. Use the wrapper:
+Built with Gradle (Kotlin DSL) on a JDK 21 toolchain. Use the wrapper:
 
 - `./gradlew run` — run the server locally on port 8080
 - `./gradlew build` — compile, run tests, assemble
