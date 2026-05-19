@@ -1,7 +1,7 @@
 import java.net.URI
 
 val ktor_version = "2.3.13"
-val kotlin_version = "1.9.25"
+val kotlin_version = "2.2.21"
 val logback_version = "1.5.32"
 val prometeus_version = "1.15.11"
 val koin_version = "3.5.6"
@@ -9,9 +9,9 @@ val exposedVersion = "0.53.0"
 
 plugins {
     application
-    kotlin("jvm") version "1.9.25"
+    kotlin("jvm") version "2.2.21"
     id("io.ktor.plugin") version "2.3.13"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.25"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
     id("maven-publish")
 }
 
