@@ -5,7 +5,7 @@ val kotlin_version = "2.2.21"
 val logback_version = "1.5.32"
 val prometeus_version = "1.15.11"
 val koin_version = "3.5.6"
-val exposedVersion = "0.53.0"
+val exposedVersion = "1.3.0"
 
 plugins {
     application
@@ -81,7 +81,6 @@ dependencies {
 
     //JDBCRuleStore
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.postgresql:postgresql:42.7.11")
     testImplementation("com.h2database:h2:2.3.232")

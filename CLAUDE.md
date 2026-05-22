@@ -57,7 +57,7 @@ Note: `validateScope` calls `call.respond(Forbidden)` on failure but does **not*
 `RuleStore` interface (create, read, delete, list with cursor, initialize, ruleSet). Two implementations:
 
 - `InMemoryRuleStore` — `HashMap`; cursor is a stringified offset into `values.toList()` (unstable across insertions — fine for tests, not production).
-- `JDBCRuleStore` — Exposed (`exposed-core/dao/jdbc` 0.40.1). Single `Rules` table; JWT-claim conditions (`iss`, `sub`, `aud`, `exp`, `nbf`, `iat`, `jti`) are stored as JSON-serialized `kotlinx.serialization` blobs in `text` columns — not normalized, because the app never queries inside them. Cursor is a stringified offset; `list()` uses SQL `LIMIT/OFFSET` when `limit` is set, otherwise reads all and slices.
+- `JDBCRuleStore` — Exposed (`exposed-core` + `exposed-jdbc` 1.3.0; symbols live under `org.jetbrains.exposed.v1.core.*` and `org.jetbrains.exposed.v1.jdbc.*`). Single `Rules` table; JWT-claim conditions (`iss`, `sub`, `aud`, `exp`, `nbf`, `iat`, `jti`) are stored as JSON-serialized `kotlinx.serialization` blobs in `text` columns — not normalized, because the app never queries inside them. Cursor is a stringified offset; `list()` uses SQL `LIMIT/OFFSET` when `limit` is set, otherwise reads all and slices.
 
 Domain types (`Rule`, `RuleSet`, `Claims`, `conditions.*`) come from the external `jwt-revocation-rules` library — do not redefine them here.
 

@@ -6,16 +6,15 @@ import com.mfrancza.jwtrevocation.rules.conditions.StringEquals
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.ResultRow
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.SchemaUtils
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
+import org.jetbrains.exposed.v1.jdbc.insert
+import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.UUID
 
 /**
@@ -85,7 +84,7 @@ class JDBCRuleStore(url: String, user: String = "", password: String = "") : Rul
 
     override fun read(ruleId: String): Rule? {
         return transaction(db) {
-            Rules.select {
+            Rules.selectAll().where {
                 Rules.ruleId.eq(ruleId)
             }.map {
                 rowToRule(it)
@@ -112,7 +111,7 @@ class JDBCRuleStore(url: String, user: String = "", password: String = "") : Rul
                 .orderBy(Rules.ruleId)
                 .let {
                     if (limit != null) {
-                        it.limit(limit, offset.toLong())
+                        it.limit(limit).offset(offset.toLong())
                     } else {
                         it
                     }
