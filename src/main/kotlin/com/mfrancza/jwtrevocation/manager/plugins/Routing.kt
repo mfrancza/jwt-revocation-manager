@@ -8,8 +8,6 @@ import io.ktor.http.CacheControl
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.CachingOptions
 import io.ktor.server.application.Application
-import io.ktor.server.application.ApplicationCall
-import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
@@ -17,12 +15,12 @@ import io.ktor.server.plugins.*
 import io.ktor.server.plugins.cachingheaders.caching
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
+import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
-import io.ktor.util.pipeline.PipelineContext
 import org.koin.ktor.ext.inject
 import java.lang.IllegalArgumentException
 import java.time.Instant
@@ -34,7 +32,7 @@ fun Application.configureRouting() {
         val ruleStore by inject<RuleStore>()
 
         authenticate("auth-jwt") {
-            suspend fun PipelineContext<Unit,ApplicationCall>.validateScope(scope: String, block: suspend () -> Unit) {
+            suspend fun RoutingContext.validateScope(scope: String, block: suspend () -> Unit) {
                 if (call.principal<JWTPrincipal>()?.hasScope(scope) != true) {
                     call.respond(HttpStatusCode.Forbidden, "Access denied")
                 }
