@@ -22,7 +22,6 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import org.koin.ktor.ext.inject
-import java.lang.IllegalArgumentException
 import java.time.Instant
 
 fun Application.configureRouting() {
@@ -82,9 +81,6 @@ fun Application.configureRouting() {
                 post {
                     validateScope("POST:/rules") {
                         val newRule = call.receive<Rule>()
-                        if (newRule.ruleId != null) {
-                            throw IllegalArgumentException()
-                        }
                         call.respond(ruleStore.create(newRule))
                     }
                 }

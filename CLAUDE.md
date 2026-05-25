@@ -38,7 +38,7 @@ Ktor (Netty) server using Koin for DI. `Application.kt::makeJwtRevocationManager
 
 1. `DependencyInjection` — binds a single `RuleStore` based on `DataStoreSettings.url` prefix (`in-memory` → `InMemoryRuleStore`, `jdbc` → `JDBCRuleStore`). `makeRuleStore` is the dispatch point — add new store types here.
 2. `Security` — installs the `auth-jwt` provider. The JWT validator calls `notRevoked(ruleStore.ruleSet())` from `jwt-revocation-ktor-server-auth`, so **the manager's own API enforces its own revocation rules against incoming admin tokens**. A rule that matches the admin's token will lock them out.
-3. `Serialization`, `HTTP`, `Monitoring`, `Routing`.
+3. `Serialization`, `StatusPages`, `HTTP`, `Monitoring`, `Routing`. `StatusPages` maps `BadRequestException` and `IllegalArgumentException` (e.g. the one thrown by `RuleStore.create` when `ruleId` is non-null) to 400; everything else to 500 with a generic body.
 
 ### Authorization model
 
