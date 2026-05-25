@@ -93,15 +93,13 @@ class JDBCRuleStore(url: String, user: String = "", password: String = "") : Rul
     }
 
     override fun delete(ruleId: String): Rule? {
-        val rule = read(ruleId)
-        if (rule != null) {
-            transaction(db) {
-                Rules.deleteWhere {
-                    Rules.ruleId.eq(ruleId)
-                }
-            }
+        return transaction(db) {
+            val rule = Rules.selectAll().where {
+                Rules.ruleId.eq(ruleId)
+            }.map { rowToRule(it) }.singleOrNull() ?: return@transaction null
+            val deleted = Rules.deleteWhere { Rules.ruleId.eq(ruleId) }
+            if (deleted > 0) rule else null
         }
-        return rule
     }
 
     override fun list(cursor: String?, limit: Int?): PartialList {
