@@ -101,6 +101,26 @@ abstract class RuleStoreTest {
     }
 
     /**
+     * Test that asking for exactly as many rules as exist does not yield a stale cursor
+     */
+    @Test
+    fun testListWithLimitEqualToRemaining() {
+        repeat(3) { i ->
+            ruleStore.create(Rule(
+                ruleExpires = 1667156265,
+                iss = listOf(StringEquals(value = "exact-$i.mfrancza.com"))
+            ))
+        }
+
+        //some tests share a backing store (e.g. JDBC H2 in-memory), so derive the total
+        val total = ruleStore.list().rules.size
+
+        val page = ruleStore.list(cursor = null, limit = total)
+        assertEquals(total, page.rules.size, "Should return every rule in a single page")
+        assertNull(page.cursor, "Cursor must be null when the page exhausts the store")
+    }
+
+    /**
      * Test that deleting a rule removes it from the rule store
      */
     @Test
