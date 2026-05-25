@@ -25,6 +25,8 @@ import org.koin.ktor.ext.inject
 import java.lang.IllegalArgumentException
 import java.time.Instant
 
+private const val MAX_RULES_LIMIT = 1000
+
 fun Application.configureRouting() {
 
     routing {
@@ -73,6 +75,9 @@ fun Application.configureRouting() {
                             call.request.queryParameters["limit"]?.toInt()
                         } catch(e : NumberFormatException) {
                             throw BadRequestException("limit must be an integer", e)
+                        }
+                        if (limit != null && limit !in 1..MAX_RULES_LIMIT) {
+                            throw BadRequestException("limit must be between 1 and $MAX_RULES_LIMIT")
                         }
                         call.respond(
                             ruleStore.list(cursor, limit)
