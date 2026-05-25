@@ -91,15 +91,23 @@ fun Application.configureRouting() {
                     get {
                         validateScope("GET:/rules/{ruleId}") {
                             val ruleId = call.parameters["ruleId"] ?: throw IllegalArgumentException()
-                            val rule = ruleStore.read(ruleId) ?: call.respond(HttpStatusCode.NotFound, "Rule not found")
-                            call.respond(rule)
+                            val rule = ruleStore.read(ruleId)
+                            if (rule != null) {
+                                call.respond(rule)
+                            } else {
+                                call.respond(HttpStatusCode.NotFound, "Rule not found")
+                            }
                         }
                     }
                     delete {
                         validateScope("DELETE:/rules/{ruleId}") {
                             val ruleId = call.parameters["ruleId"] ?: throw IllegalArgumentException()
-                            val rule = ruleStore.delete(ruleId) ?: call.respond(HttpStatusCode.NotFound, "Rule not found")
-                            call.respond(rule)
+                            val rule = ruleStore.delete(ruleId)
+                            if (rule != null) {
+                                call.respond(rule)
+                            } else {
+                                call.respond(HttpStatusCode.NotFound, "Rule not found")
+                            }
                         }
                     }
                 }

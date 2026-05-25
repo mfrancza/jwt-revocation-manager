@@ -287,6 +287,37 @@ class ApplicationTest {
 
     }
 
+    @Test
+    fun testMissingRuleReturnsNotFound() = testApplication {
+        val issuer = "testIssuer"
+        val audience = "testAudience"
+        val jwtSecret = "testSecret"
+
+        application(makeJwtRevocationManager(
+            SecuritySettings(audience, issuer, SecuritySettings.HS256(jwtSecret)),
+            DataStoreSettings("in-memory", "", "")
+        ))
+
+        val token = JWT.create()
+            .withAudience(audience)
+            .withIssuer(issuer)
+            .withClaim("scope", "GET:/rules/{ruleId} DELETE:/rules/{ruleId}")
+            .withExpiresAt(Date(System.currentTimeMillis() + 60000))
+            .sign(Algorithm.HMAC256(jwtSecret))
+
+        val client = createClient {
+            install(ContentNegotiation) { json() }
+            install(Auth) { bearer { loadTokens { BearerTokens(token, "NotUsed") } } }
+        }
+
+        client.get("/rules/does-not-exist").apply {
+            assertEquals(HttpStatusCode.NotFound, status)
+        }
+        client.delete("/rules/does-not-exist").apply {
+            assertEquals(HttpStatusCode.NotFound, status)
+        }
+    }
+
     private fun validateExpectedRules(expectedRules: List<Rule>, actualRules: List<Rule>) {
         assertEquals(expectedRules.size, actualRules.size, "The number of rules should be the same")
         expectedRules.forEach {
