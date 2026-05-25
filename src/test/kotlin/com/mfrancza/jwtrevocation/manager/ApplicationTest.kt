@@ -244,8 +244,37 @@ class ApplicationTest {
         }
 
         //try to delete a rule, which should result in a 403 since the client only has read permissions
-        readOnlyClient.delete("/rules/${expectedRules.first().ruleId}").apply {
+        val protectedRule = expectedRules.first()
+        readOnlyClient.delete("/rules/${protectedRule.ruleId}").apply {
             assertEquals(HttpStatusCode.Forbidden, status)
+        }
+
+        //the forbidden delete must not have mutated the store
+        client.get("/rules/${protectedRule.ruleId}").apply {
+            assertEquals(HttpStatusCode.OK, status, "Rule must still exist after a forbidden delete")
+            assertEquals(protectedRule, this.body<Rule>())
+        }
+
+        //try to create a rule, which should also be forbidden and must not mutate the store
+        val rejectedRule = Rule(
+            ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
+            sub = listOf(
+                StringEquals(
+                    value = "should-not-be-created.mfrancza.com"
+                )
+            )
+        )
+        readOnlyClient.post("/rules") {
+            contentType(ContentType.Application.Json)
+            setBody(rejectedRule)
+        }.apply {
+            assertEquals(HttpStatusCode.Forbidden, status)
+        }
+
+        client.get("/rules").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            val rules = this.body<PartialList>().rules
+            validateExpectedRules(expectedRules, rules)
         }
 
         //create an unauthenticated client
