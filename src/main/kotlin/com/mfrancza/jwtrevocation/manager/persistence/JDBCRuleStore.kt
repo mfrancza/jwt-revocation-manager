@@ -106,33 +106,28 @@ class JDBCRuleStore(url: String, user: String = "", password: String = "") : Rul
 
     override fun list(cursor: String?, limit: Int?): PartialList {
         val offset = cursor?.toInt() ?: 0
-        val rules = transaction(db) {
-            Rules.selectAll()
-                .orderBy(Rules.ruleId)
-                .let {
-                    if (limit != null) {
-                        it.limit(limit).offset(offset.toLong())
-                    } else {
-                        it
-                    }
-                }
-                .map { rowToRule(it) }
-                .let {
-                    if (limit == null) {
-                        it.subList(offset, it.size)
-                    } else {
-                        it
-                    }
-                }
+        if (limit == null) {
+            val all = transaction(db) {
+                Rules.selectAll()
+                    .orderBy(Rules.ruleId)
+                    .map { rowToRule(it) }
+            }
+            return PartialList(all.subList(offset.coerceAtMost(all.size), all.size), null)
         }
 
+        //fetch one extra row to detect whether another page exists without
+        //handing out a cursor that points past the last row
+        val rows = transaction(db) {
+            Rules.selectAll()
+                .orderBy(Rules.ruleId)
+                .limit(limit + 1)
+                .offset(offset.toLong())
+                .map { rowToRule(it) }
+        }
+        val hasMore = rows.size > limit
         return PartialList(
-            rules,
-            if (limit != null && rules.size == limit) {
-                (offset + limit).toString()
-            } else {
-                null
-            }
+            rules = if (hasMore) rows.take(limit) else rows,
+            cursor = if (hasMore) (offset + limit).toString() else null
         )
     }
 
