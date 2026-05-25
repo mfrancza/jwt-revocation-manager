@@ -51,6 +51,7 @@ Note: `validateScope` calls `call.respond(Forbidden)` on failure but does **not*
 - `GET /ruleset` — full `RuleSet` for clients to cache; 5-second `Cache-Control: max-age`
 - `POST /revoked` — server-side check: accepts `Claims`, returns whether any rule matches; 5-second cache
 - `GET/POST /rules`, `GET/DELETE /rules/{ruleId}` — admin CRUD. No update; mutate by delete+create. `POST` rejects rules with a pre-set `ruleId`.
+- `GET /metrics-micrometer` — Prometheus scrape endpoint, also scope-gated (`GET:/metrics-micrometer`). Defined in `plugins/Monitoring.kt`, not `Routing.kt`, so it uses an inline `hasScope` check rather than the local `validateScope` helper.
 
 ### Rule store
 
