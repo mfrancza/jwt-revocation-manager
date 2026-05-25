@@ -380,6 +380,12 @@ class ApplicationTest {
         client.get("/rules") { this.parameter("limit", "1000") }.apply {
             assertEquals(HttpStatusCode.OK, status)
         }
+
+        for (badCursor in listOf("abc", "-1", "1.5")) {
+            client.get("/rules") { this.parameter("cursor", badCursor) }.apply {
+                assertEquals(HttpStatusCode.BadRequest, status, "cursor=$badCursor should be rejected")
+            }
+        }
     }
 
     private fun validateExpectedRules(expectedRules: List<Rule>, actualRules: List<Rule>) {

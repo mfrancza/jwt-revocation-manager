@@ -71,6 +71,15 @@ fun Application.configureRouting() {
                 get {
                     validateScope( "GET:/rules") {
                         val cursor = call.request.queryParameters["cursor"]
+                        if (cursor != null) {
+                            //both store implementations parse cursor with toInt(); reject
+                            //bad input here so it surfaces as 400 instead of crashing the store
+                            val parsed = cursor.toIntOrNull()
+                                ?: throw BadRequestException("cursor must be a non-negative integer")
+                            if (parsed < 0) {
+                                throw BadRequestException("cursor must be a non-negative integer")
+                            }
+                        }
                         val limit = try {
                             call.request.queryParameters["limit"]?.toInt()
                         } catch(e : NumberFormatException) {
