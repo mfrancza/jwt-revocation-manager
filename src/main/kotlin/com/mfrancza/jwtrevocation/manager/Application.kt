@@ -8,6 +8,7 @@ import com.mfrancza.jwtrevocation.manager.plugins.configureMonitoring
 import com.mfrancza.jwtrevocation.manager.plugins.configureRouting
 import com.mfrancza.jwtrevocation.manager.plugins.configureSecurity
 import com.mfrancza.jwtrevocation.manager.plugins.configureSerialization
+import com.mfrancza.jwtrevocation.manager.plugins.configureStatusPages
 import com.mfrancza.jwtrevocation.manager.plugins.makeRuleStore
 import io.ktor.server.application.Application
 import io.ktor.server.engine.embeddedServer
@@ -19,6 +20,7 @@ fun makeJwtRevocationManager(securitySettings: SecuritySettings, dataStoreSettin
         configureDependencyInjection(dataStoreSettings)
         configureSecurity(securitySettings)
         configureSerialization()
+        configureStatusPages()
         configureHTTP()
         configureMonitoring()
         configureRouting()

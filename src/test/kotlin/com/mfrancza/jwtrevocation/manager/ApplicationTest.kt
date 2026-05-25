@@ -347,6 +347,58 @@ class ApplicationTest {
         }
     }
 
+    @Test
+    fun testBadRequestsReturn400() = testApplication {
+        val issuer = "testIssuer"
+        val audience = "testAudience"
+        val jwtSecret = "testSecret"
+
+        application(makeJwtRevocationManager(
+            SecuritySettings(audience, issuer, SecuritySettings.HS256(jwtSecret)),
+            DataStoreSettings("in-memory", "", "")
+        ))
+
+        val token = JWT.create()
+            .withAudience(audience)
+            .withIssuer(issuer)
+            .withClaim("scope", "GET:/rules POST:/rules")
+            .withExpiresAt(Date(System.currentTimeMillis() + 60000))
+            .sign(Algorithm.HMAC256(jwtSecret))
+
+        val client = createClient {
+            install(ContentNegotiation) { json() }
+            install(Auth) { bearer { loadTokens { BearerTokens(token, "NotUsed") } } }
+        }
+
+        //a rule with a pre-set ruleId must be rejected as a client error, not surface as 500
+        val ruleWithId = Rule(
+            ruleId = "client-supplied-id",
+            ruleExpires = Instant.now().plus(1, ChronoUnit.DAYS).epochSecond,
+            iss = listOf(StringEquals(value = "bad.mfrancza.com"))
+        )
+        client.post("/rules") {
+            contentType(ContentType.Application.Json)
+            setBody(ruleWithId)
+        }.apply {
+            assertEquals(HttpStatusCode.BadRequest, status)
+        }
+
+        //a non-numeric limit must come back as 400 not 500
+        client.get("/rules") {
+            this.parameter("limit", "not-a-number")
+        }.apply {
+            assertEquals(HttpStatusCode.BadRequest, status)
+        }
+
+        //a malformed JSON body must come back as 400 not 500
+        client.post("/rules") {
+            contentType(ContentType.Application.Json)
+            setBody("{ not valid json")
+        }.apply {
+            assertEquals(HttpStatusCode.BadRequest, status)
+        }
+    }
+
     private fun validateExpectedRules(expectedRules: List<Rule>, actualRules: List<Rule>) {
         assertEquals(expectedRules.size, actualRules.size, "The number of rules should be the same")
         expectedRules.forEach {
