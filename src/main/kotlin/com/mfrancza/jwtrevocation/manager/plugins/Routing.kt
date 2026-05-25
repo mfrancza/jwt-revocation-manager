@@ -35,8 +35,9 @@ fun Application.configureRouting() {
             suspend fun RoutingContext.validateScope(scope: String, block: suspend () -> Unit) {
                 if (call.principal<JWTPrincipal>()?.hasScope(scope) != true) {
                     call.respond(HttpStatusCode.Forbidden, "Access denied")
+                } else {
+                    block()
                 }
-                block()
             }
             route("/revoked") {
                 post {
