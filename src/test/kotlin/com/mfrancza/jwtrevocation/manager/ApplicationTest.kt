@@ -347,6 +347,39 @@ class ApplicationTest {
         }
     }
 
+    @Test
+    fun testMetricsRequiresScope() = testApplication {
+        val issuer = "testIssuer"
+        val audience = "testAudience"
+        val jwtSecret = "testSecret"
+
+        application(makeJwtRevocationManager(
+            SecuritySettings(audience, issuer, SecuritySettings.HS256(jwtSecret)),
+            DataStoreSettings("in-memory", "", "")
+        ))
+
+        fun tokenWithScope(scope: String) = JWT.create()
+            .withAudience(audience)
+            .withIssuer(issuer)
+            .withClaim("scope", scope)
+            .withExpiresAt(Date(System.currentTimeMillis() + 60000))
+            .sign(Algorithm.HMAC256(jwtSecret))
+
+        val withMetricsScope = createClient {
+            install(Auth) { bearer { loadTokens { BearerTokens(tokenWithScope("GET:/metrics-micrometer"), "NotUsed") } } }
+        }
+        val withoutMetricsScope = createClient {
+            install(Auth) { bearer { loadTokens { BearerTokens(tokenWithScope("GET:/ruleset"), "NotUsed") } } }
+        }
+
+        withMetricsScope.get("/metrics-micrometer").apply {
+            assertEquals(HttpStatusCode.OK, status)
+        }
+        withoutMetricsScope.get("/metrics-micrometer").apply {
+            assertEquals(HttpStatusCode.Forbidden, status)
+        }
+    }
+
     private fun validateExpectedRules(expectedRules: List<Rule>, actualRules: List<Rule>) {
         assertEquals(expectedRules.size, actualRules.size, "The number of rules should be the same")
         expectedRules.forEach {
